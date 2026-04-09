@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ชุมชนบาตง กทม.</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --green: #1A3A2A;
+  --green2: #0F2A1C;
+  --green3: #2D7A50;
+  --green-light: #EFF5F1;
+  --green-mid: #7DB898;
+  --bg: #F4F2ED;
+  --white: #fff;
+  --border: #E4E0D8;
+  --text: #1A1A1A;
+  --text2: #555;
+  --text3: #999;
+  --red: #C94040;
+  --red-bg: #FEF0F0;
+}
+
+html { height: 100%; }
+body { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── PAGE ENGINE: only .active page is visible ── */
+.page { display: none; }
+
+/* each page defines its own layout when active */
+#pg-register.active {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 36px 16px 60px;
+  background: var(--bg);
+  animation: fadeUp .22s ease;
+}
+
+#pg-login.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--green);
+  padding: 20px;
+  animation: fadeUp .22s ease;
+}
+
+#pg-admin.active {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+  animation: fadeUp .22s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ══════════════════════════════
+   REGISTER PAGE
+══════════════════════════════ */
+.form-card {
+  background: var(--white);
+  width: 100%; max-width: 480px;
+  border-radius: 18px; overflow: hidden;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.09);
+}
+.form-head {
+  background: var(--green);
+  padding: 28px 30px 24px; color: #fff; position: relative;
+}
+.f-label { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--green-mid); font-weight: 600; margin-bottom: 6px; }
+.f-title { font-size: 22px; font-weight: 700; }
+.f-sub   { font-size: 13px; color: #8AAF96; margin-top: 5px; }
+.admin-link {
+  position: absolute; right: 18px; bottom: 18px;
+  font-size: 11px; color: rgba(255,255,255,.28);
+  cursor: pointer; transition: color .2s; user-select: none;
+}
+.admin-link:hover { color: rgba(255,255,255,.7); }
+
+.form-body { padding: 26px 30px 30px; }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 13px; font-weight: 600; color: #444; margin-bottom: 6px; }
+.req { color: var(--red); margin-left: 2px; }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  font-family: 'Sarabun', sans-serif; font-size: 15px;
+  color: var(--text); background: #FAFAF8;
+  transition: border-color .15s, background .15s;
+  outline: none; -webkit-appearance: none; appearance: none;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--green); background: var(--white);
+}
+.field textarea { resize: none; line-height: 1.6; }
+
+.cb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cb-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border: 1.5px solid var(--border);
+  border-radius: 10px; cursor: pointer; background: #FAFAF8;
+  transition: all .15s; font-size: 14px; color: #444; user-select: none;
+}
+.cb-item input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; flex-shrink: 0; }
+.cb-item:has(input:checked) { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+
+.divider { height: 1px; background: #F0EDE6; margin: 4px 0 20px; }
+
+.btn-primary {
+  width: 100%; padding: 13px;
+  background: var(--green); color: #fff; border: none;
+  border-radius: 10px; font-family: 'Sarabun', sans-serif;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: background .15s, transform .1s; margin-top: 4px;
+}
+.btn-primary:hover  { background: var(--green2); }
+.btn-primary:active { transform: scale(.985); }
+.btn-primary:disabled { background: #9AB5A3; cursor: not-allowed; }
+
+.note { font-size: 11px; color: #C0C0C0; text-align: center; margin-top: 14px; line-height: 1.6; }
+
+.success-wrap { display: none; text-align: center; padding: 8px 0 6px; }
+.success-icon {
+  width: 54px; height: 54px; background: var(--green-light);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+}
+.success-wrap h3 { font-size: 18px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.success-wrap p  { font-size: 14px; color: var(--text3); }
+.btn-again {
+  display: inline-block; margin-top: 20px; padding: 11px 32px;
+  background: var(--green); color: #fff; border: none; border-radius: 10px;
+  font-family: 'Sarabun', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer;
+}
+.btn-again:hover { background: var(--green2); }
+
+/* ══════════════════════════════
+   LOGIN PAGE
+══════════════════════════════ */
+.login-card {
+  background: var(--white); width: 100%; max-width: 360px;
+  border-radius: 18px; overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0,0,0,.28);
+}
+.login-head { background: var(--green); padding: 30px 28px 26px; text-align: center; color: #fff; }
+.login-logo {
+  width: 52px; height: 52px; background: rgba(255,255,255,.12);
+  border-radius: 14px; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+}
+.login-head h2 { font-size: 20px; font-weight: 700; }
+.login-head p  { font-size: 13px; color: var(--green-mid); margin-top: 4px; }
+.login-body { padding: 24px 28px 28px; }
+.login-err {
+  display: none; background: var(--red-bg); border: 1px solid #F5C0C0;
+  color: var(--red); border-radius: 8px; padding: 10px 14px;
+  font-size: 13px; margin-bottom: 16px;
+}
+.back-link { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text3); cursor: pointer; }
+.back-link span { color: var(--green); font-weight: 600; }
+.back-link:hover span { text-decoration: underline; }
+
+/* ══════════════════════════════
+   ADMIN PAGE
+══════════════════════════════ */
+.topbar {
+  background: var(--green); height: 56px; padding: 0 24px;
+  display: flex; align-items: center; gap: 0;
+  flex-shrink: 0; position: sticky; top: 0; z-index: 50;
+}
+.topbar-brand { font-size: 15px; font-weight: 700; color: #fff; margin-right: 24px; white-space: nowrap; }
+
+.nav-tabs { display: flex; height: 100%; }
+.nav-tab {
+  display: flex; align-items: center; padding: 0 18px;
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,.5);
+  cursor: pointer; border-bottom: 3px solid transparent;
+  border-top: 3px solid transparent; transition: all .15s; white-space: nowrap;
+}
+.nav-tab:hover { color: rgba(255,255,255,.85); }
+.nav-tab.active { color: #fff; font-weight: 700; border-bottom-color: var(--green-mid); }
+
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.user-badge { font-size: 12px; color: var(--green-mid); font-weight: 500; }
+
+.btn-sm { padding: 7px 14px; border-radius: 8px; border: none; font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; }
+.btn-ghost { background: rgba(255,255,255,.1); color: #fff; }
+.btn-ghost:hover { background: rgba(255,255,255,.2); }
+.btn-white { background: var(--white); color: var(--green); font-weight: 700; }
+.btn-white:hover { opacity: .88; }
+
+/* Admin sub-panels */
+.panel { display: none; flex: 1; }
+.panel.active { display: block; }
+.p-inner { max-width: 1040px; margin: 0 auto; padding: 24px 20px 52px; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 22px; }
+.stat-card { background: var(--white); border-radius: 12px; padding: 16px 18px; border-top: 3px solid var(--border); }
+.stat-card.g { border-top-color: var(--green3); }
+.stat-card.b { border-top-color: #2A6496; }
+.stat-card.a { border-top-color: #B07D1A; }
+.s-v { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1; }
+.s-l { font-size: 12px; color: var(--text3); margin-top: 6px; }
+
+/* Filterbar */
+.filterbar {
+  background: var(--white); border-radius: 12px;
+  padding: 12px 16px; display: flex; align-items: center;
+  gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.sbox {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg); border-radius: 8px;
+  padding: 8px 12px; flex: 1; min-width: 180px;
+}
+.sbox input { border: none; background: none; font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--text); outline: none; width: 100%; }
+.sbox input::placeholder { color: #C0C0C0; }
+.fsel { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 13px; color: #444; background: var(--white); outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; }
+.cnt { font-size: 12px; color: var(--text3); margin-left: auto; white-space: nowrap; }
+
+/* Export */
+.exp-bar { display: flex; gap: 8px; margin-bottom: 14px; }
+.btn-exp {
+  padding: 9px 18px; border-radius: 9px; border: 1.5px solid var(--border);
+  background: var(--white); font-family: 'Sarabun', sans-serif;
+  font-size: 14px; font-weight: 600; color: var(--green);
+  cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 7px;
+}
+.btn-exp:hover { background: var(--green-light); border-color: var(--green3); }
+
+/* Table */
+.tbl-card { background: var(--white); border-radius: 12px; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead th { text-align: left; padding: 10px 16px; font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; background: #FAFAF8; border-bottom: 1px solid #EEE; }
+tbody tr { border-bottom: 1px solid #F0EDE6; cursor: pointer; transition: background .1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #FAFAF8; }
+tbody td { padding: 13px 16px; font-size: 14px; color: var(--text2); vertical-align: middle; }
+.td-n  { font-weight: 600; color: var(--text); }
+.td-sm { font-size: 13px; }
+.td-d  { font-size: 13px; color: var(--text3); }
+.pill { display: inline-block; padding: 3px 9px; background: var(--green-light); color: var(--green3); border-radius: 6px; font-size: 12px; font-weight: 600; }
+.htag { display: inline-block; padding: 2px 7px; background: #F0EDE6; color: #666; border-radius: 4px; font-size: 11px; margin: 2px 2px 2px 0; }
+.no-data { text-align: center; padding: 48px; color: var(--text3); font-size: 14px; }
+
+/* Pager */
+.pager { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 16px; }
+.pg { min-width: 32px; height: 32px; padding: 0 8px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid var(--border); background: var(--white); font-size: 13px; color: var(--text2); cursor: pointer; transition: all .12s; font-family: 'Sarabun', sans-serif; }
+.pg:hover { border-color: var(--green); color: var(--green); }
+.pg.on { background: var(--green); color: #fff; border-color: var(--green); }
+
+/* Admin manager */
+.sec-head { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+.adm-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.adm-row { background: var(--white); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); }
+.adm-left { display: flex; align-items: center; gap: 12px; }
+.adm-av { width: 38px; height: 38px; border-radius: 10px; background: var(--green-light); color: var(--green3); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+.adm-av.root { background: var(--green); color: #fff; }
+.a-u { font-size: 14px; font-weight: 700; color: var(--text); }
+.a-n { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.badge-root { display: inline-block; padding: 2px 8px; margin-left: 6px; background: #FFF8E1; color: #7A5800; border-radius: 5px; font-size: 11px; font-weight: 700; border: 1px solid #FFD54F; }
+.btn-del-sm { padding: 6px 14px; border-radius: 7px; border: 1px solid #F5C0C0; background: var(--red-bg); color: var(--red); font-family: 'Sarabun', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
+.btn-del-sm:hover { opacity: .8; }
+
+.add-box { background: var(--white); border-radius: 12px; padding: 20px 22px; border: 1.5px dashed var(--border); }
+.add-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.row2 .field { margin: 0; }
+
+/* Modal */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.42); z-index: 200; padding: 40px 16px; overflow-y: auto; }
+.overlay.on { display: block; }
+.modal { background: var(--white); border-radius: 16px; max-width: 460px; margin: 0 auto; overflow: hidden; animation: fadeUp .18s ease; }
+.modal-head { background: var(--green); padding: 20px 24px; color: #fff; display: flex; align-items: flex-start; justify-content: space-between; }
+.m-name    { font-size: 18px; font-weight: 700; }
+.m-vil     { font-size: 13px; color: var(--green-mid); margin-top: 3px; }
+.m-x { background: rgba(255,255,255,.12); border: none; color: #fff; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+.m-x:hover { background: rgba(255,255,255,.22); }
+.modal-body { padding: 18px 24px; }
+.drow { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #F0EDE6; font-size: 14px; }
+.drow:last-child { border-bottom: none; }
+.dk { color: var(--text3); font-size: 13px; flex-shrink: 0; width: 110px; }
+.dv { color: var(--text); font-weight: 600; text-align: right; flex: 1; }
+.modal-actions { display: flex; gap: 8px; padding: 4px 24px 20px; }
+.btn-del2  { flex:1; padding:10px; border-radius:8px; border:none; font-family:'Sarabun',sans-serif; font-size:14px; font-weight:700; cursor:pointer; background:var(--red-bg); color:var(--red); }
+.btn-del2:hover { opacity:.82; }
+.btn-cls2  { flex:1; padding:10px; border-radius:8px; border:none; font-family:'Sarabun',sans-serif; font-size:14px; font-weight:700; cursor:pointer; background:var(--green); color:#fff; }
+.btn-cls2:hover { opacity:.88; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: #1A3A2A; color: #fff; padding: 12px 22px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; z-index: 300;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+  transition: transform .3s ease, opacity .3s ease; opacity: 0; pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+@media (max-width:680px) {
+  .stats { grid-template-columns: repeat(2,1fr); }
+  thead th:nth-child(n+5), tbody td:nth-child(n+5) { display: none; }
+  .row2 { grid-template-columns: 1fr; }
+  .nav-tab { padding: 0 12px; font-size: 12px; }
+  .topbar-brand { font-size: 13px; margin-right: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ PAGE: REGISTER ══════════════ -->
+<div id="pg-register" class="page active">
+  <div class="form-card">
+    <div class="form-head">
+      <div class="f-label">ต.บาตง อ.รือเสาะ จ.นราธิวาส — กรุงเทพมหานคร</div>
+      <div class="f-title">ลงทะเบียนสมาชิก</div>
+      <div class="f-sub">สำหรับคนบาตงที่พักอยู่ใน กทม.</div>
+      <span class="admin-link" onclick="goPage('pg-login')">เข้าสู่ระบบแอดมิน</span>
+    </div>
+    <div class="form-body">
+      <div id="form-fields">
+        <div class="field">
+          <label>ชื่อ-นามสกุล <span class="req">*</span></label>
+          <input type="text" id="f-name" placeholder="เช่น อาหมัด มะแอ">
+        </div>
+        <div class="field">
+          <label>หมู่บ้านที่บาตง <span class="req">*</span></label>
+          <select id="f-village">
+            <option value="">เลือกหมู่บ้าน...</option>
+            <option>หมู่ที่ 1 — บ้านตะแม็ง</option>
+            <option>หมู่ที่ 2 — บ้านสันติสุข</option>
+            <option>หมู่ที่ 3 — บ้านบาตง</option>
+            <option>หมู่ที่ 4 — บ้านบลูกาฮูลู</option>
+            <option>หมู่ที่ 5 — บ้านตันหยง</option>
+            <option>หมู่ที่ 6 — บ้านบลูกาฮีเล</option>
+            <option>หมู่ที่ 7 — บ้านกำปงบูเก๊ะ</option>
+            <option>หมู่ที่ 8 — บ้านบลูกาฮีเลตะวันตก</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>เบอร์โทรศัพท์ <span class="req">*</span></label>
+          <input type="tel" id="f-phone" placeholder="0xx-xxx-xxxx" maxlength="12">
+        </div>
+        <div class="divider"></div>
+        <div class="field">
+          <label>ปัจจุบันทำงานอะไร</label>
+          <input type="text" id="f-job" placeholder="เช่น พนักงานบริษัท, ค้าขาย, นักศึกษา...">
+        </div>
+        <div class="field">
+          <label>พักอยู่แถวไหนใน กทม.</label>
+          <input type="text" id="f-area" placeholder="เช่น ลาดพร้าว, มีนบุรี, บางนา...">
+        </div>
+        <div class="divider"></div>
+        <div class="field">
+          <label>พร้อมช่วยงานด้านไหน</label>
+          <div class="cb-grid">
+            <label class="cb-item"><input type="checkbox" value="งานศพ"> งานศพ</label>
+            <label class="cb-item"><input type="checkbox" value="งานด่วน"> งานด่วน</label>
+            <label class="cb-item"><input type="checkbox" value="งานบวช"> งานบวช</label>
+            <label class="cb-item"><input type="checkbox" value="งานแต่ง"> งานแต่ง</label>
+            <label class="cb-item"><input type="checkbox" value="ขนของ/ช่วยแรง"> ขนของ/ช่วยแรง</label>
+            <label class="cb-item"><input type="checkbox" value="อื่นๆ"> อื่นๆ</label>
+          </div>
+        </div>
+        <button class="btn-primary" id="btn-submit" onclick="submitForm()">ส่งข้อมูล</button>
+        <div class="note">ข้อมูลจะถูกส่งและบันทึกเพื่อประสานงานชุมชนเท่านั้น</div>
+      </div>
+
+      <div class="success-wrap" id="success-wrap">
+        <div class="success-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <path d="M5 13l6 6L21 7" stroke="#1A3A2A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>ส่งข้อมูลเรียบร้อย</h3>
+        <p>ขอบคุณที่ลงทะเบียน<br>ทีมงานจะติดต่อเมื่อมีกิจกรรม</p>
+        <button class="btn-again" onclick="resetForm()">ลงทะเบียนคนอื่น</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE: LOGIN ══════════════ -->
+<div id="pg-login" class="page">
+  <div class="login-card">
+    <div class="login-head">
+      <div class="login-logo">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <rect x="4" y="12" width="18" height="12" rx="2.5" stroke="white" stroke-width="1.8"/>
+          <path d="M8.5 12V8.5a4.5 4.5 0 0 1 9 0V12" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="13" cy="18" r="1.5" fill="white"/>
+        </svg>
+      </div>
+      <h2>เข้าสู่ระบบแอดมิน</h2>
+      <p>ชุมชนบาตง กรุงเทพมหานคร</p>
+    </div>
+    <div class="login-body">
+      <div class="login-err" id="login-err">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
+      <div class="field">
+        <label>ชื่อผู้ใช้</label>
+        <input type="text" id="l-user" placeholder="username" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>รหัสผ่าน</label>
+        <input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') doLogin()">
+      </div>
+      <button class="btn-primary" style="margin-top:8px;" onclick="doLogin()">เข้าสู่ระบบ</button>
+      <div class="back-link" onclick="goPage('pg-register')">← กลับไป<span> หน้าลงทะเบียน</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE: ADMIN ══════════════ -->
+<div id="pg-admin" class="page">
+
+  <div class="topbar">
+    <div class="topbar-brand">ชุมชนบาตง กทม.</div>
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="switchPanel('p-members',this)">สมาชิก</div>
+      <div class="nav-tab" onclick="switchPanel('p-admins',this)">จัดการแอดมิน</div>
+    </div>
+    <div class="topbar-right">
+      <span class="user-badge" id="user-badge"></span>
+      <button class="btn-sm btn-ghost" onclick="loadData()">รีเฟรช</button>
+      <button class="btn-sm btn-white" onclick="doLogout()">ออกจากระบบ</button>
+    </div>
+  </div>
+
+  <!-- Panel: Members -->
+  <div id="p-members" class="panel active">
+    <div class="p-inner">
+
+      <div class="stats">
+        <div class="stat-card g"><div class="s-v" id="s-total">—</div><div class="s-l">สมาชิกทั้งหมด</div></div>
+        <div class="stat-card b"><div class="s-v" id="s-new">—</div><div class="s-l">เพิ่มสัปดาห์นี้</div></div>
+        <div class="stat-card a"><div class="s-v" id="s-vil">—</div><div class="s-l">หมู่บ้านที่มี</div></div>
+        <div class="stat-card">  <div class="s-v" id="s-area">—</div><div class="s-l">โซนใน กทม.</div></div>
+      </div>
+
+      <div class="exp-bar">
+        <button class="btn-exp" onclick="exportCSV()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3M2 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Export CSV
+        </button>
+      </div>
+
+      <div class="filterbar">
+        <div class="sbox">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="#C0C0C0" stroke-width="1.4"/><path d="M8.5 8.5l3 3" stroke="#C0C0C0" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <input type="text" id="q-q" placeholder="ค้นหาชื่อ เบอร์ หรือโซน..." oninput="applyFilter()">
+        </div>
+        <select class="fsel" id="q-vil" onchange="applyFilter()"><option value="">ทุกหมู่บ้าน</option></select>
+        <select class="fsel" id="q-ar"  onchange="applyFilter()"><option value="">ทุกโซน กทม.</option></select>
+        <select class="fsel" id="q-hlp" onchange="applyFilter()">
+          <option value="">ทุกประเภทงาน</option>
+          <option>งานศพ</option><option>งานด่วน</option>
+          <option>งานบวช</option><option>งานแต่ง</option>
+          <option>ขนของ/ช่วยแรง</option>
+        </select>
+        <span class="cnt" id="cnt">— รายการ</span>
+      </div>
+
+      <div class="tbl-card">
+        <table>
+          <thead>
+            <tr><th>#</th><th>ชื่อ-นามสกุล</th><th>หมู่บ้าน</th><th>เบอร์โทร</th><th>งานปัจจุบัน</th><th>โซน กทม.</th><th>ช่วยงาน</th></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div class="pager" id="pager"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Admin Manager -->
+  <div id="p-admins" class="panel">
+    <div class="p-inner" style="max-width:600px;">
+      <div class="sec-head">รายชื่อแอดมิน</div>
+      <div class="adm-list" id="adm-list"></div>
+      <div class="add-box">
+        <h4>เพิ่มแอดมินใหม่</h4>
+        <div class="row2">
+          <div class="field"><label>ชื่อผู้ใช้ <span class="req">*</span></label><input type="text" id="nu" placeholder="username"></div>
+          <div class="field"><label>รหัสผ่าน <span class="req">*</span></label><input type="password" id="np" placeholder="••••••••"></div>
+        </div>
+        <div class="field" style="margin-bottom:14px;"><label>ชื่อ-นามสกุล</label><input type="text" id="nn" placeholder="ชื่อแอดมินคนนี้"></div>
+        <button class="btn-primary" style="max-width:180px;" onclick="addAdmin()">เพิ่มแอดมิน</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ MODAL ══════════════ -->
+<div class="overlay" id="ov" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div><div class="m-name" id="m-name"></div><div class="m-vil" id="m-vil"></div></div>
+      <button class="m-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="drow"><span class="dk">เบอร์โทร</span><span class="dv" id="m-ph"></span></div>
+      <div class="drow"><span class="dk">งานปัจจุบัน</span><span class="dv" id="m-job"></span></div>
+      <div class="drow"><span class="dk">โซน กทม.</span><span class="dv" id="m-ar"></span></div>
+      <div class="drow"><span class="dk">ช่วยงานด้าน</span><span class="dv" id="m-hlp"></span></div>
+      <div class="drow"><span class="dk">ลงทะเบียน</span><span class="dv" id="m-ts"></span></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-del2" onclick="deleteRow()">ลบรายการนี้</button>
+      <button class="btn-cls2" onclick="closeModal()">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ TOAST ══════════════ -->
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+
+/* ── state ── */
+let currentAdmin = null;
+let allData = [], filtered = [], selIdx = null, curPage = 1;
+const PER = 15;
+
+const SAMPLE = [
+  { name:'อาหมัด มะแอ',           village:'หมู่ที่ 3 — บ้านบาตง',              phone:'089-111-2222', job:'พนักงานบริษัท', area:'ลาดพร้าว', helps:'งานศพ, งานด่วน',          timestamp:'09/04/2568 08:30' },
+  { name:'ฮาซัน โต๊ะมิ',          village:'หมู่ที่ 1 — บ้านตะแม็ง',            phone:'091-333-4444', job:'ค้าขาย',        area:'มีนบุรี',  helps:'งานศพ',                  timestamp:'09/04/2568 09:10' },
+  { name:'นูรีดา สาและ',           village:'หมู่ที่ 5 — บ้านตันหยง',            phone:'093-555-6666', job:'นักศึกษา',      area:'บางเขน',  helps:'งานบวช, งานแต่ง',        timestamp:'08/04/2568 14:20' },
+  { name:'อิสมาแอ ยูโซ๊ะ',        village:'หมู่ที่ 4 — บ้านบลูกาฮูลู',         phone:'086-777-8888', job:'ช่างเชื่อม',   area:'บางนา',   helps:'ขนของ/ช่วยแรง, งานด่วน', timestamp:'08/04/2568 16:45' },
+  { name:'ซูลัยดา แวหามะ',        village:'หมู่ที่ 2 — บ้านสันติสุข',           phone:'092-999-0000', job:'พยาบาล',       area:'ดอนเมือง',helps:'งานศพ, งานด่วน',          timestamp:'07/04/2568 11:00' },
+  { name:'มูฮัมหมัด เจ๊ะแว',      village:'หมู่ที่ 6 — บ้านบลูกาฮีเล',         phone:'082-123-4567', job:'ไรเดอร์',      area:'ลาดพร้าว',helps:'งานด่วน, ขนของ/ช่วยแรง', timestamp:'07/04/2568 13:30' },
+  { name:'ฟาตีมะห์ หะยีดอเลาะ',  village:'หมู่ที่ 7 — บ้านกำปงบูเก๊ะ',        phone:'084-234-5678', job:'แม่บ้าน',      area:'สาทร',    helps:'งานศพ, งานแต่ง',          timestamp:'06/04/2568 09:00' },
+  { name:'อับดุลเลาะ กาเซ็ง',     village:'หมู่ที่ 8 — บ้านบลูกาฮีเลตะวันตก', phone:'085-345-6789', job:'ทนายความ',    area:'รัชดา',   helps:'งานด่วน',                timestamp:'06/04/2568 15:20' },
+  { name:'นาซือเราะห์ แวดือราแม', village:'หมู่ที่ 3 — บ้านบาตง',              phone:'087-456-7890', job:'ครู',          area:'บึงกุ่ม', helps:'งานบวช, งานศพ',           timestamp:'05/04/2568 10:10' },
+  { name:'ซาการียา ยูนุ',         village:'หมู่ที่ 1 — บ้านตะแม็ง',            phone:'088-567-8901', job:'วิศวกร',      area:'บางเขน',  helps:'ขนของ/ช่วยแรง',           timestamp:'05/04/2568 12:00' },
+];
+
+/* ── admin storage ── */
+function getAdmins() {
+  try { const r = localStorage.getItem('batong_adm'); if (r) return JSON.parse(r); } catch(e){}
+  const def = [{ user:'usman', pass:'usman', name:'Usman', root:true }];
+  setAdmins(def); return def;
+}
+function setAdmins(list) { localStorage.setItem('batong_adm', JSON.stringify(list)); }
+
+/* ── page routing — key fix: each page has its own display value ── */
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ── auth ── */
+function doLogin() {
+  const adms = getAdmins();
+  const u = document.getElementById('l-user').value.trim();
+  const p = document.getElementById('l-pass').value;
+  const found = adms.find(a => a.user === u && a.pass === p);
+  const errEl = document.getElementById('login-err');
+  if (!found) { errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+  document.getElementById('l-pass').value = '';
+  currentAdmin = found;
+  document.getElementById('user-badge').textContent = found.name || found.user;
+  goPage('pg-admin');
+  loadData();
+}
+
+function doLogout() {
+  currentAdmin = null;
+  goPage('pg-register');
+}
+
+/* ── admin sub-panel tabs ── */
+function switchPanel(id, tab) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  tab.classList.add('active');
+  if (id === 'p-admins') renderAdmins();
+}
+
+/* ── data ── */
+function loadData() {
+  allData = [...SAMPLE];
+  processData();
+}
+
+function processData() {
+  const vils  = [...new Set(allData.map(d=>d.village).filter(Boolean))].sort();
+  const areas = [...new Set(allData.map(d=>d.area).filter(Boolean))].sort();
+  const vS=document.getElementById('q-vil'), aS=document.getElementById('q-ar');
+  const cv=vS.value, ca=aS.value;
+  vS.innerHTML='<option value="">ทุกหมู่บ้าน</option>'+vils.map(v=>`<option${v===cv?' selected':''}>${v}</option>`).join('');
+  aS.innerHTML='<option value="">ทุกโซน กทม.</option>'+areas.map(a=>`<option${a===ca?' selected':''}>${a}</option>`).join('');
+  document.getElementById('s-total').textContent = allData.length;
+  document.getElementById('s-vil').textContent   = vils.length;
+  document.getElementById('s-area').textContent  = areas.length;
+  const wk = allData.filter(d => {
+    try { const pts=d.timestamp.split('/'); return Date.now()-new Date(`${+pts[2].split(' ')[0]-543}-${pts[1]}-${pts[0]}`)<7*864e5; }catch{return false;}
+  });
+  document.getElementById('s-new').textContent = wk.length;
+  applyFilter();
+}
+
+function applyFilter() {
+  const q   = document.getElementById('q-q').value.toLowerCase();
+  const vil = document.getElementById('q-vil').value;
+  const ar  = document.getElementById('q-ar').value;
+  const hlp = document.getElementById('q-hlp').value;
+  filtered = allData.filter(d =>
+    (!q   || [d.name,d.phone,d.area,d.job,d.village].some(f=>(f||'').toLowerCase().includes(q))) &&
+    (!vil || d.village===vil) && (!ar||d.area===ar) && (!hlp||(d.helps||'').includes(hlp))
+  );
+  document.getElementById('cnt').textContent = filtered.length+' รายการ';
+  curPage=1; renderTable(); renderPager();
+}
+
+function renderTable() {
+  const s=(curPage-1)*PER, page=filtered.slice(s,s+PER);
+  const tb=document.getElementById('tbody');
+  if(!page.length){tb.innerHTML=`<tr><td colspan="7" class="no-data">ไม่พบข้อมูล</td></tr>`;return;}
+  tb.innerHTML=page.map((d,i)=>{
+    const tags=(d.helps||'').split(',').map(h=>`<span class="htag">${h.trim()}</span>`).join('');
+    const vs=(d.village||'').replace(/หมู่ที่ \d+ — /,'');
+    return `<tr onclick="openModal(${s+i})">
+      <td class="td-d">${s+i+1}</td>
+      <td class="td-n">${d.name||'—'}</td>
+      <td><span class="pill">${vs||'—'}</span></td>
+      <td class="td-sm">${d.phone||'—'}</td>
+      <td class="td-d">${d.job||'—'}</td>
+      <td class="td-d">${d.area||'—'}</td>
+      <td>${tags||'<span style="color:#CCC;font-size:12px;">—</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPager() {
+  const total=Math.ceil(filtered.length/PER), el=document.getElementById('pager');
+  if(total<=1){el.innerHTML='';return;}
+  let h=`<button class="pg" onclick="goP(${curPage-1})">‹</button>`;
+  for(let i=1;i<=total;i++){
+    if(i===1||i===total||Math.abs(i-curPage)<=1)
+      h+=`<button class="pg${i===curPage?' on':''}" onclick="goP(${i})">${i}</button>`;
+    else if(Math.abs(i-curPage)===2)
+      h+=`<span style="color:#CCC;padding:0 3px">…</span>`;
+  }
+  el.innerHTML=h+`<button class="pg" onclick="goP(${curPage+1})">›</button>`;
+}
+function goP(p){const t=Math.ceil(filtered.length/PER);if(p<1||p>t)return;curPage=p;renderTable();renderPager();}
+
+function openModal(idx) {
+  selIdx=idx; const d=filtered[idx];
+  document.getElementById('m-name').textContent = d.name    ||'—';
+  document.getElementById('m-vil').textContent  = d.village ||'—';
+  document.getElementById('m-ph').textContent   = d.phone   ||'—';
+  document.getElementById('m-job').textContent  = d.job     ||'—';
+  document.getElementById('m-ar').textContent   = d.area    ||'—';
+  document.getElementById('m-hlp').textContent  = d.helps   ||'—';
+  document.getElementById('m-ts').textContent   = d.timestamp||'—';
+  document.getElementById('ov').classList.add('on');
+}
+function closeModal(){document.getElementById('ov').classList.remove('on');selIdx=null;}
+
+function deleteRow(){
+  if(selIdx===null)return;
+  const name=filtered[selIdx].name;
+  if(!confirm(`ยืนยันลบ "${name}"?`))return;
+  const oi=allData.indexOf(filtered[selIdx]);
+  if(oi>-1)allData.splice(oi,1);
+  closeModal(); processData();
+  toast(`ลบ "${name}" เรียบร้อยแล้ว`);
+}
+
+function exportCSV(){
+  if(!filtered.length){alert('ไม่มีข้อมูล');return;}
+  const h=['ชื่อ-นามสกุล','หมู่บ้าน','เบอร์โทร','งานปัจจุบัน','โซน กทม.','ช่วยงานด้าน','วันที่'];
+  const rows=filtered.map(d=>[d.name,d.village,d.phone,d.job,d.area,d.helps,d.timestamp].map(v=>`"${(v||'').replace(/"/g,'""')}"`));
+  const csv='\uFEFF'+[h,...rows].map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='สมาชิกบาตง_'+new Date().toLocaleDateString('th-TH').replace(/\//g,'-')+'.csv';
+  a.click();
+}
+
+/* ── admin manager ── */
+function renderAdmins() {
+  const adms=getAdmins();
+  document.getElementById('adm-list').innerHTML=adms.map((a,i)=>{
+    const av=(a.name||a.user).substring(0,2).toUpperCase();
+    const canDel=!a.root && currentAdmin?.root;
+    return `<div class="adm-row">
+      <div class="adm-left">
+        <div class="adm-av ${a.root?'root':''}">${av}</div>
+        <div>
+          <div class="a-u">${a.user}${a.root?'<span class="badge-root">หัวหน้า</span>':''}</div>
+          <div class="a-n">${a.name||'—'}</div>
+        </div>
+      </div>
+      ${canDel?`<button class="btn-del-sm" onclick="removeAdmin(${i})">ลบ</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+function addAdmin(){
+  const u=document.getElementById('nu').value.trim();
+  const p=document.getElementById('np').value.trim();
+  const n=document.getElementById('nn').value.trim();
+  if(!u||!p){alert('กรุณาใส่ชื่อผู้ใช้และรหัสผ่าน');return;}
+  const adms=getAdmins();
+  if(adms.find(a=>a.user===u)){alert(`ชื่อผู้ใช้ "${u}" มีอยู่แล้ว`);return;}
+  adms.push({user:u,pass:p,name:n,root:false});
+  setAdmins(adms);
+  ['nu','np','nn'].forEach(id=>document.getElementById(id).value='');
+  renderAdmins();
+  toast(`เพิ่มแอดมิน "${u}" เรียบร้อยแล้ว`);
+}
+
+function removeAdmin(i){
+  const adms=getAdmins();
+  const a=adms[i];
+  if(!a||a.root){alert('ไม่สามารถลบหัวหน้าแอดมินได้');return;}
+  if(!confirm(`ยืนยันลบ "${a.user}"?`))return;
+  adms.splice(i,1); setAdmins(adms); renderAdmins();
+  toast(`ลบแอดมิน "${a.user}" เรียบร้อยแล้ว`);
+}
+
+/* ── register form ── */
+function submitForm(){
+  const name=document.getElementById('f-name').value.trim();
+  const village=document.getElementById('f-village').value;
+  const phone=document.getElementById('f-phone').value.trim();
+  const job=document.getElementById('f-job').value.trim();
+  const area=document.getElementById('f-area').value.trim();
+  const helps=[...document.querySelectorAll('.cb-grid input:checked')].map(c=>c.value).join(', ');
+  if(!name||!village||!phone){alert('กรุณากรอกชื่อ หมู่บ้าน และเบอร์โทรให้ครบ');return;}
+  const btn=document.getElementById('btn-submit');
+  btn.disabled=true; btn.textContent='กำลังส่ง...';
+  SAMPLE.unshift({name,village,phone,job,area,helps,timestamp:new Date().toLocaleString('th-TH')});
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,village,phone,job,area,helps})})
+  .catch(()=>{}).finally(()=>{
+    document.getElementById('form-fields').style.display='none';
+    document.getElementById('success-wrap').style.display='block';
+    btn.disabled=false; btn.textContent='ส่งข้อมูล';
+  });
+}
+
+function resetForm(){
+  ['f-name','f-phone','f-job','f-area'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-village').value='';
+  document.querySelectorAll('.cb-grid input').forEach(c=>c.checked=false);
+  document.getElementById('form-fields').style.display='block';
+  document.getElementById('success-wrap').style.display='none';
+}
+
+/* ── toast ── */
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+setInterval(()=>{ if(currentAdmin) loadData(); }, 60000);
+</script>
+</body>
+</html>
