@@ -6,333 +6,388 @@
 <title>ชุมชนบาตง กทม.</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --g:#1A3A2A;--g2:#0F2A1C;--g3:#2D7A50;
+  --gm:#7DB898;--gl:#EFF5F1;
+  --bg:#F2F0EB;--white:#fff;
+  --border:#E2DED6;
+  --txt:#1A1A1A;--txt2:#555;--txt3:#999;
+  --red:#C04040;--redl:#FEF0F0;
+  --blue:#2A5E96;--amber:#B07A1A;--amberl:#FEF8ED;
+  --r:14px;--rs:10px;
+  --sh:0 2px 16px rgba(0,0,0,0.07);
+  --shl:0 8px 40px rgba(0,0,0,0.18);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;}
 
-:root {
-  --green: #1A3A2A;
-  --green2: #0F2A1C;
-  --green3: #2D7A50;
-  --green-light: #EFF5F1;
-  --green-mid: #7DB898;
-  --bg: #F4F2ED;
-  --white: #fff;
-  --border: #E4E0D8;
-  --text: #1A1A1A;
-  --text2: #555;
-  --text3: #999;
-  --red: #C94040;
-  --red-bg: #FEF0F0;
+/* PAGE TRANSITIONS */
+.page{
+  position:fixed;inset:0;background:var(--bg);
+  overflow-y:auto;overflow-x:hidden;
+  opacity:1;transform:translateX(0);
+  transition:opacity 0.25s ease,transform 0.25s ease;
+  z-index:1;
+}
+.page.hidden{
+  opacity:0;pointer-events:none;
+  transform:translateX(40px);z-index:0;
+}
+.page.slide-out-left{
+  opacity:0;transform:translateX(-40px);
 }
 
-html { height: 100%; }
-body { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+/* ════════════════════════════
+   FORM PAGE
+════════════════════════════ */
+#pg-form{display:flex;flex-direction:column;align-items:center;padding-bottom:60px;}
 
-/* ── PAGE ENGINE: only .active page is visible ── */
-.page { display: none; }
+.hero{
+  width:100%;background:var(--g);
+  padding:52px 24px 40px;
+  text-align:center;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:240px;height:240px;border-radius:50%;
+  background:rgba(255,255,255,0.04);
+}
+.hero::after{
+  content:'';position:absolute;bottom:-50px;left:-50px;
+  width:180px;height:180px;border-radius:50%;
+  background:rgba(255,255,255,0.03);
+}
+.hero-tag{
+  display:inline-block;
+  background:rgba(255,255,255,0.1);color:var(--gm);
+  font-size:11px;font-weight:600;letter-spacing:0.13em;
+  padding:5px 14px;border-radius:20px;
+  margin-bottom:16px;text-transform:uppercase;
+  position:relative;z-index:1;
+}
+.hero-title{
+  font-size:28px;font-weight:700;color:#fff;
+  line-height:1.25;margin-bottom:8px;
+  position:relative;z-index:1;
+}
+.hero-sub{font-size:14px;color:#8AAF96;position:relative;z-index:1;}
+.hero-admin{
+  position:absolute;bottom:12px;right:16px;
+  font-size:11px;color:rgba(255,255,255,0.28);
+  cursor:pointer;border:none;background:none;
+  font-family:'Sarabun',sans-serif;padding:4px;
+  transition:color 0.2s;z-index:1;
+}
+.hero-admin:hover{color:rgba(255,255,255,0.65);}
 
-/* each page defines its own layout when active */
-#pg-register.active {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 36px 16px 60px;
-  background: var(--bg);
-  animation: fadeUp .22s ease;
-}
+.fbody{width:100%;max-width:520px;padding:26px 16px 0;}
 
-#pg-login.active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: var(--green);
-  padding: 20px;
-  animation: fadeUp .22s ease;
+.slabel{
+  font-size:10px;font-weight:700;color:var(--txt3);
+  letter-spacing:0.12em;text-transform:uppercase;
+  margin-bottom:12px;padding-left:2px;display:block;
 }
+.card{
+  background:var(--white);border-radius:var(--r);
+  padding:20px;margin-bottom:14px;
+  box-shadow:var(--sh);border:1px solid var(--border);
+}
+.field{margin-bottom:14px;}
+.field:last-child{margin-bottom:0;}
+.field label{
+  display:block;font-size:13px;font-weight:600;
+  color:#3A3A3A;margin-bottom:6px;
+}
+.req{color:var(--red);margin-left:2px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:var(--rs);
+  font-family:'Sarabun',sans-serif;font-size:15px;
+  color:var(--txt);background:#FAFAF8;
+  outline:none;-webkit-appearance:none;
+  transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--g);background:var(--white);
+  box-shadow:0 0 0 3px rgba(26,58,42,0.08);
+}
+.field textarea{resize:none;line-height:1.7;}
 
-#pg-admin.active {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--bg);
-  animation: fadeUp .22s ease;
+.chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.chk{
+  display:flex;align-items:center;gap:9px;
+  padding:11px 13px;border:1.5px solid var(--border);
+  border-radius:var(--rs);cursor:pointer;background:#FAFAF8;
+  transition:all 0.15s;font-size:14px;color:#555;user-select:none;
 }
+.chk input[type=checkbox]{width:17px;height:17px;accent-color:var(--g);cursor:pointer;flex-shrink:0;}
+.chk:has(input:checked){border-color:var(--g);background:var(--gl);color:var(--g);font-weight:600;}
 
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(10px); }
-  to   { opacity:1; transform:translateY(0); }
+.btn-main{
+  width:100%;padding:15px;background:var(--g);color:#fff;border:none;
+  border-radius:var(--rs);font-family:'Sarabun',sans-serif;
+  font-size:16px;font-weight:700;cursor:pointer;
+  transition:background 0.15s,transform 0.1s;
+  box-shadow:0 4px 14px rgba(26,58,42,0.25);
 }
+.btn-main:hover{background:var(--g2);}
+.btn-main:active{transform:scale(0.98);}
+.btn-main:disabled{background:#9AB5A3;box-shadow:none;cursor:not-allowed;}
 
-/* ══════════════════════════════
-   REGISTER PAGE
-══════════════════════════════ */
-.form-card {
-  background: var(--white);
-  width: 100%; max-width: 480px;
-  border-radius: 18px; overflow: hidden;
-  box-shadow: 0 4px 32px rgba(0,0,0,0.09);
-}
-.form-head {
-  background: var(--green);
-  padding: 28px 30px 24px; color: #fff; position: relative;
-}
-.f-label { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--green-mid); font-weight: 600; margin-bottom: 6px; }
-.f-title { font-size: 22px; font-weight: 700; }
-.f-sub   { font-size: 13px; color: #8AAF96; margin-top: 5px; }
-.admin-link {
-  position: absolute; right: 18px; bottom: 18px;
-  font-size: 11px; color: rgba(255,255,255,.28);
-  cursor: pointer; transition: color .2s; user-select: none;
-}
-.admin-link:hover { color: rgba(255,255,255,.7); }
+.fnote{font-size:11px;color:#BBB;text-align:center;margin-top:12px;line-height:1.7;}
 
-.form-body { padding: 26px 30px 30px; }
-.field { margin-bottom: 16px; }
-.field label { display: block; font-size: 13px; font-weight: 600; color: #444; margin-bottom: 6px; }
-.req { color: var(--red); margin-left: 2px; }
-.field input, .field select, .field textarea {
-  width: 100%; padding: 11px 14px;
-  border: 1.5px solid var(--border); border-radius: 10px;
-  font-family: 'Sarabun', sans-serif; font-size: 15px;
-  color: var(--text); background: #FAFAF8;
-  transition: border-color .15s, background .15s;
-  outline: none; -webkit-appearance: none; appearance: none;
+.ok-screen{display:none;text-align:center;padding:16px 0;}
+.ok-circle{
+  width:64px;height:64px;border-radius:50%;background:var(--g);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;box-shadow:0 4px 20px rgba(26,58,42,0.3);
 }
-.field input:focus, .field select:focus, .field textarea:focus {
-  border-color: var(--green); background: var(--white);
+.ok-screen h3{font-size:20px;font-weight:700;color:var(--g);margin-bottom:8px;}
+.ok-screen p{font-size:14px;color:var(--txt3);line-height:1.7;}
+.btn-out{
+  margin-top:20px;padding:11px 28px;
+  background:transparent;border:1.5px solid var(--g);
+  border-radius:var(--rs);color:var(--g);
+  font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all 0.15s;
 }
-.field textarea { resize: none; line-height: 1.6; }
+.btn-out:hover{background:var(--gl);}
 
-.cb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.cb-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 12px; border: 1.5px solid var(--border);
-  border-radius: 10px; cursor: pointer; background: #FAFAF8;
-  transition: all .15s; font-size: 14px; color: #444; user-select: none;
-}
-.cb-item input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; flex-shrink: 0; }
-.cb-item:has(input:checked) { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
-
-.divider { height: 1px; background: #F0EDE6; margin: 4px 0 20px; }
-
-.btn-primary {
-  width: 100%; padding: 13px;
-  background: var(--green); color: #fff; border: none;
-  border-radius: 10px; font-family: 'Sarabun', sans-serif;
-  font-size: 16px; font-weight: 700; cursor: pointer;
-  transition: background .15s, transform .1s; margin-top: 4px;
-}
-.btn-primary:hover  { background: var(--green2); }
-.btn-primary:active { transform: scale(.985); }
-.btn-primary:disabled { background: #9AB5A3; cursor: not-allowed; }
-
-.note { font-size: 11px; color: #C0C0C0; text-align: center; margin-top: 14px; line-height: 1.6; }
-
-.success-wrap { display: none; text-align: center; padding: 8px 0 6px; }
-.success-icon {
-  width: 54px; height: 54px; background: var(--green-light);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 14px;
-}
-.success-wrap h3 { font-size: 18px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
-.success-wrap p  { font-size: 14px; color: var(--text3); }
-.btn-again {
-  display: inline-block; margin-top: 20px; padding: 11px 32px;
-  background: var(--green); color: #fff; border: none; border-radius: 10px;
-  font-family: 'Sarabun', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer;
-}
-.btn-again:hover { background: var(--green2); }
-
-/* ══════════════════════════════
+/* ════════════════════════════
    LOGIN PAGE
-══════════════════════════════ */
-.login-card {
-  background: var(--white); width: 100%; max-width: 360px;
-  border-radius: 18px; overflow: hidden;
-  box-shadow: 0 12px 48px rgba(0,0,0,.28);
+════════════════════════════ */
+#pg-login{
+  display:flex;align-items:center;justify-content:center;
+  background:var(--g);min-height:100vh;padding:20px;
 }
-.login-head { background: var(--green); padding: 30px 28px 26px; text-align: center; color: #fff; }
-.login-logo {
-  width: 52px; height: 52px; background: rgba(255,255,255,.12);
-  border-radius: 14px; display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 14px;
+.lbox{
+  background:var(--white);width:100%;max-width:360px;
+  border-radius:20px;overflow:hidden;box-shadow:var(--shl);
 }
-.login-head h2 { font-size: 20px; font-weight: 700; }
-.login-head p  { font-size: 13px; color: var(--green-mid); margin-top: 4px; }
-.login-body { padding: 24px 28px 28px; }
-.login-err {
-  display: none; background: var(--red-bg); border: 1px solid #F5C0C0;
-  color: var(--red); border-radius: 8px; padding: 10px 14px;
-  font-size: 13px; margin-bottom: 16px;
+.ltop{
+  background:var(--g);padding:36px 28px 28px;text-align:center;
 }
-.back-link { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text3); cursor: pointer; }
-.back-link span { color: var(--green); font-weight: 600; }
-.back-link:hover span { text-decoration: underline; }
+.licon{
+  width:52px;height:52px;border-radius:14px;
+  background:rgba(255,255,255,0.12);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+}
+.ltop h2{font-size:20px;font-weight:700;color:#fff;}
+.ltop p{font-size:13px;color:var(--gm);margin-top:5px;}
+.lform{padding:24px 28px 28px;}
+.lerr{
+  display:none;background:var(--redl);border:1px solid #F5C0C0;
+  color:var(--red);border-radius:8px;
+  padding:10px 14px;font-size:13px;margin-bottom:16px;
+}
+.lback{text-align:center;margin-top:18px;font-size:13px;color:var(--txt3);cursor:pointer;}
+.lback span{color:var(--g);font-weight:700;}
 
-/* ══════════════════════════════
+/* ════════════════════════════
    ADMIN PAGE
-══════════════════════════════ */
-.topbar {
-  background: var(--green); height: 56px; padding: 0 24px;
-  display: flex; align-items: center; gap: 0;
-  flex-shrink: 0; position: sticky; top: 0; z-index: 50;
+════════════════════════════ */
+#pg-admin{padding-bottom:0;}
+
+.abar{
+  background:var(--g);padding:15px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
 }
-.topbar-brand { font-size: 15px; font-weight: 700; color: #fff; margin-right: 24px; white-space: nowrap; }
-
-.nav-tabs { display: flex; height: 100%; }
-.nav-tab {
-  display: flex; align-items: center; padding: 0 18px;
-  font-size: 13px; font-weight: 500; color: rgba(255,255,255,.5);
-  cursor: pointer; border-bottom: 3px solid transparent;
-  border-top: 3px solid transparent; transition: all .15s; white-space: nowrap;
+.abar-l{display:flex;flex-direction:column;}
+.abar-title{font-size:15px;font-weight:700;color:#fff;}
+.abar-sub{font-size:11px;color:var(--gm);margin-top:1px;}
+.abar-r{display:flex;gap:8px;}
+.bbtn{
+  padding:7px 14px;border-radius:8px;border:none;
+  font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all 0.15s;
 }
-.nav-tab:hover { color: rgba(255,255,255,.85); }
-.nav-tab.active { color: #fff; font-weight: 700; border-bottom-color: var(--green-mid); }
+.bbtn-g{background:rgba(255,255,255,0.1);color:#fff;}
+.bbtn-g:hover{background:rgba(255,255,255,0.2);}
+.bbtn-w{background:#fff;color:var(--g);}
+.bbtn-w:hover{opacity:0.9;}
 
-.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-.user-badge { font-size: 12px; color: var(--green-mid); font-weight: 500; }
+.atabs{
+  display:flex;background:var(--g2);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.atab{
+  flex:1;padding:13px;text-align:center;
+  font-size:13px;font-weight:600;
+  color:rgba(255,255,255,0.4);cursor:pointer;
+  border-bottom:2.5px solid transparent;transition:all 0.15s;
+}
+.atab.on{color:#fff;border-bottom-color:var(--gm);}
+.atab:hover{color:rgba(255,255,255,0.75);}
 
-.btn-sm { padding: 7px 14px; border-radius: 8px; border: none; font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; }
-.btn-ghost { background: rgba(255,255,255,.1); color: #fff; }
-.btn-ghost:hover { background: rgba(255,255,255,.2); }
-.btn-white { background: var(--white); color: var(--green); font-weight: 700; }
-.btn-white:hover { opacity: .88; }
+.abody{padding:20px;max-width:1060px;margin:0 auto;}
+.apanel{display:none;}
+.apanel.on{display:block;}
 
-/* Admin sub-panels */
-.panel { display: none; flex: 1; }
-.panel.active { display: block; }
-.p-inner { max-width: 1040px; margin: 0 auto; padding: 24px 20px 52px; }
+.notif{
+  display:none;background:var(--gl);
+  border:1px solid #A8D5B8;color:#1A5C32;
+  padding:11px 16px;border-radius:10px;
+  font-size:14px;margin-bottom:16px;
+  align-items:center;gap:9px;
+}
+.notif.show{display:flex;}
 
 /* Stats */
-.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 22px; }
-.stat-card { background: var(--white); border-radius: 12px; padding: 16px 18px; border-top: 3px solid var(--border); }
-.stat-card.g { border-top-color: var(--green3); }
-.stat-card.b { border-top-color: #2A6496; }
-.stat-card.a { border-top-color: #B07D1A; }
-.s-v { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1; }
-.s-l { font-size: 12px; color: var(--text3); margin-top: 6px; }
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.sc{background:var(--white);border-radius:var(--r);padding:16px 18px;border-top:3px solid var(--border);box-shadow:var(--sh);}
+.sc.cg{border-top-color:var(--g3);}
+.sc.cb{border-top-color:var(--blue);}
+.sc.ca{border-top-color:var(--amber);}
+.sv{font-size:30px;font-weight:700;}
+.sk{font-size:12px;color:var(--txt3);margin-top:5px;}
 
-/* Filterbar */
-.filterbar {
-  background: var(--white); border-radius: 12px;
-  padding: 12px 16px; display: flex; align-items: center;
-  gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
+/* Toolbar */
+.toolbar{
+  background:var(--white);border-radius:var(--r);
+  padding:12px 16px;display:flex;align-items:center;
+  gap:10px;margin-bottom:14px;flex-wrap:wrap;
+  box-shadow:var(--sh);border:1px solid var(--border);
 }
-.sbox {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--bg); border-radius: 8px;
-  padding: 8px 12px; flex: 1; min-width: 180px;
+.sbox{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg);border-radius:8px;
+  padding:8px 12px;flex:1;min-width:150px;
 }
-.sbox input { border: none; background: none; font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--text); outline: none; width: 100%; }
-.sbox input::placeholder { color: #C0C0C0; }
-.fsel { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 13px; color: #444; background: var(--white); outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; }
-.cnt { font-size: 12px; color: var(--text3); margin-left: auto; white-space: nowrap; }
+.sbox input{
+  border:none;background:none;font-family:'Sarabun',sans-serif;
+  font-size:14px;color:var(--txt);outline:none;width:100%;
+}
+.sbox input::placeholder{color:#C0BDB8;}
+.fsel{
+  padding:8px 12px;border:1px solid var(--border);border-radius:8px;
+  font-family:'Sarabun',sans-serif;font-size:13px;color:#444;
+  background:var(--white);outline:none;cursor:pointer;
+}
+.cnt{font-size:12px;color:var(--txt3);margin-left:auto;white-space:nowrap;}
 
-/* Export */
-.exp-bar { display: flex; gap: 8px; margin-bottom: 14px; }
-.btn-exp {
-  padding: 9px 18px; border-radius: 9px; border: 1.5px solid var(--border);
-  background: var(--white); font-family: 'Sarabun', sans-serif;
-  font-size: 14px; font-weight: 600; color: var(--green);
-  cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 7px;
+.exrow{display:flex;gap:8px;margin-bottom:14px;}
+.exbtn{
+  display:flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:9px;
+  border:1.5px solid var(--border);background:var(--white);
+  font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;
+  color:var(--g);cursor:pointer;transition:all 0.15s;box-shadow:var(--sh);
 }
-.btn-exp:hover { background: var(--green-light); border-color: var(--green3); }
+.exbtn:hover{background:var(--gl);border-color:var(--g3);}
 
 /* Table */
-.tbl-card { background: var(--white); border-radius: 12px; overflow: hidden; }
-table { width: 100%; border-collapse: collapse; }
-thead th { text-align: left; padding: 10px 16px; font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; background: #FAFAF8; border-bottom: 1px solid #EEE; }
-tbody tr { border-bottom: 1px solid #F0EDE6; cursor: pointer; transition: background .1s; }
-tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: #FAFAF8; }
-tbody td { padding: 13px 16px; font-size: 14px; color: var(--text2); vertical-align: middle; }
-.td-n  { font-weight: 600; color: var(--text); }
-.td-sm { font-size: 13px; }
-.td-d  { font-size: 13px; color: var(--text3); }
-.pill { display: inline-block; padding: 3px 9px; background: var(--green-light); color: var(--green3); border-radius: 6px; font-size: 12px; font-weight: 600; }
-.htag { display: inline-block; padding: 2px 7px; background: #F0EDE6; color: #666; border-radius: 4px; font-size: 11px; margin: 2px 2px 2px 0; }
-.no-data { text-align: center; padding: 48px; color: var(--text3); font-size: 14px; }
-
-/* Pager */
-.pager { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 16px; }
-.pg { min-width: 32px; height: 32px; padding: 0 8px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid var(--border); background: var(--white); font-size: 13px; color: var(--text2); cursor: pointer; transition: all .12s; font-family: 'Sarabun', sans-serif; }
-.pg:hover { border-color: var(--green); color: var(--green); }
-.pg.on { background: var(--green); color: #fff; border-color: var(--green); }
-
-/* Admin manager */
-.sec-head { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
-.adm-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-.adm-row { background: var(--white); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); }
-.adm-left { display: flex; align-items: center; gap: 12px; }
-.adm-av { width: 38px; height: 38px; border-radius: 10px; background: var(--green-light); color: var(--green3); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
-.adm-av.root { background: var(--green); color: #fff; }
-.a-u { font-size: 14px; font-weight: 700; color: var(--text); }
-.a-n { font-size: 12px; color: var(--text3); margin-top: 2px; }
-.badge-root { display: inline-block; padding: 2px 8px; margin-left: 6px; background: #FFF8E1; color: #7A5800; border-radius: 5px; font-size: 11px; font-weight: 700; border: 1px solid #FFD54F; }
-.btn-del-sm { padding: 6px 14px; border-radius: 7px; border: 1px solid #F5C0C0; background: var(--red-bg); color: var(--red); font-family: 'Sarabun', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
-.btn-del-sm:hover { opacity: .8; }
-
-.add-box { background: var(--white); border-radius: 12px; padding: 20px 22px; border: 1.5px dashed var(--border); }
-.add-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
-.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-.row2 .field { margin: 0; }
-
-/* Modal */
-.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.42); z-index: 200; padding: 40px 16px; overflow-y: auto; }
-.overlay.on { display: block; }
-.modal { background: var(--white); border-radius: 16px; max-width: 460px; margin: 0 auto; overflow: hidden; animation: fadeUp .18s ease; }
-.modal-head { background: var(--green); padding: 20px 24px; color: #fff; display: flex; align-items: flex-start; justify-content: space-between; }
-.m-name    { font-size: 18px; font-weight: 700; }
-.m-vil     { font-size: 13px; color: var(--green-mid); margin-top: 3px; }
-.m-x { background: rgba(255,255,255,.12); border: none; color: #fff; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
-.m-x:hover { background: rgba(255,255,255,.22); }
-.modal-body { padding: 18px 24px; }
-.drow { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #F0EDE6; font-size: 14px; }
-.drow:last-child { border-bottom: none; }
-.dk { color: var(--text3); font-size: 13px; flex-shrink: 0; width: 110px; }
-.dv { color: var(--text); font-weight: 600; text-align: right; flex: 1; }
-.modal-actions { display: flex; gap: 8px; padding: 4px 24px 20px; }
-.btn-del2  { flex:1; padding:10px; border-radius:8px; border:none; font-family:'Sarabun',sans-serif; font-size:14px; font-weight:700; cursor:pointer; background:var(--red-bg); color:var(--red); }
-.btn-del2:hover { opacity:.82; }
-.btn-cls2  { flex:1; padding:10px; border-radius:8px; border:none; font-family:'Sarabun',sans-serif; font-size:14px; font-weight:700; cursor:pointer; background:var(--green); color:#fff; }
-.btn-cls2:hover { opacity:.88; }
-
-/* Toast */
-.toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-  background: #1A3A2A; color: #fff; padding: 12px 22px; border-radius: 10px;
-  font-size: 14px; font-weight: 500; z-index: 300;
-  box-shadow: 0 4px 20px rgba(0,0,0,.25);
-  transition: transform .3s ease, opacity .3s ease; opacity: 0; pointer-events: none;
+.tcard{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;}
+thead th{
+  text-align:left;padding:10px 16px;
+  font-size:11px;font-weight:700;color:var(--txt3);
+  letter-spacing:0.08em;text-transform:uppercase;
+  background:#F8F7F4;border-bottom:1px solid var(--border);
 }
-.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+tbody tr{border-bottom:1px solid #F0EDE6;cursor:pointer;transition:background 0.1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#F8F7F4;}
+tbody td{padding:13px 16px;font-size:14px;color:var(--txt2);vertical-align:middle;}
+.tn{font-weight:700;color:var(--txt);}
+.ts{font-size:13px;}
+.td{font-size:13px;color:var(--txt3);}
 
-@media (max-width:680px) {
-  .stats { grid-template-columns: repeat(2,1fr); }
-  thead th:nth-child(n+5), tbody td:nth-child(n+5) { display: none; }
-  .row2 { grid-template-columns: 1fr; }
-  .nav-tab { padding: 0 12px; font-size: 12px; }
-  .topbar-brand { font-size: 13px; margin-right: 10px; }
+.vpill{display:inline-block;padding:3px 9px;background:var(--gl);color:var(--g3);border-radius:6px;font-size:12px;font-weight:700;}
+.htag{display:inline-block;padding:2px 7px;background:#F0EDE6;color:#666;border-radius:4px;font-size:11px;margin:2px 2px 2px 0;}
+.empty-row{text-align:center;padding:40px;color:var(--txt3);font-size:14px;}
+
+.pager{display:flex;justify-content:center;align-items:center;gap:4px;padding:14px;}
+.pg{
+  min-width:32px;height:32px;padding:0 8px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:8px;border:1px solid var(--border);
+  background:var(--white);font-size:13px;color:var(--txt2);
+  cursor:pointer;transition:all 0.12s;font-family:'Sarabun',sans-serif;
+}
+.pg:hover{border-color:var(--g);color:var(--g);}
+.pg.on{background:var(--g);color:#fff;border-color:var(--g);}
+
+/* Drawer */
+.dbg{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.42);z-index:200;
+  align-items:flex-end;
+}
+.dbg.open{display:flex;}
+.drawer{
+  background:var(--white);width:100%;
+  border-radius:20px 20px 0 0;overflow:hidden;
+  transform:translateY(100%);max-height:90vh;overflow-y:auto;
+  transition:transform 0.28s cubic-bezier(.32,.72,0,1);
+}
+.dbg.open .drawer{transform:translateY(0);}
+.dhandle{width:40px;height:4px;background:#E0DDD8;border-radius:2px;margin:12px auto 0;}
+.dhead{background:var(--g);padding:20px 22px;display:flex;align-items:flex-start;justify-content:space-between;}
+.dname{font-size:18px;font-weight:700;color:#fff;}
+.dvil{font-size:13px;color:var(--gm);margin-top:3px;}
+.dx{background:rgba(255,255,255,0.12);border:none;color:#fff;width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dbody{padding:20px 22px;}
+.drow{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 0;border-bottom:1px solid #F0EDE6;font-size:14px;}
+.drow:last-child{border-bottom:none;}
+.dk{color:var(--txt3);font-size:13px;flex-shrink:0;width:110px;}
+.dv{color:var(--txt);font-weight:600;text-align:right;flex:1;}
+.dact{display:flex;gap:10px;padding:4px 22px 24px;}
+.bdel{flex:1;padding:12px;border-radius:10px;border:none;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:var(--redl);color:var(--red);transition:opacity .15s;}
+.bdel:hover{opacity:.8;}
+.bcls{flex:1;padding:12px;border-radius:10px;border:none;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:var(--g);color:#fff;transition:opacity .15s;}
+.bcls:hover{opacity:.88;}
+
+/* Admin list */
+.alist{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.ai{background:var(--white);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border);box-shadow:var(--sh);}
+.ail{display:flex;align-items:center;gap:12px;}
+.aav{width:40px;height:40px;border-radius:11px;background:var(--gl);color:var(--g3);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.aav.root{background:var(--g);color:#fff;}
+.au{font-size:14px;font-weight:700;color:var(--txt);}
+.ar{font-size:12px;color:var(--txt3);margin-top:2px;}
+.rbadge{display:inline-block;padding:2px 8px;background:var(--amberl);color:var(--amber);border:1px solid #F0D080;border-radius:5px;font-size:11px;font-weight:700;margin-left:6px;}
+.bds{padding:6px 14px;border-radius:7px;border:1px solid #F0C0C0;background:var(--redl);color:var(--red);font-family:'Sarabun',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.bds:hover{opacity:.8;}
+
+.addbox{background:var(--white);border-radius:var(--r);padding:20px;border:2px dashed var(--border);}
+.addbox h4{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:16px;}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.r2 .field{margin:0;}
+.badd{padding:10px 24px;border-radius:9px;border:none;background:var(--g);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;}
+.badd:hover{background:var(--g2);}
+
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+
+@media(max-width:600px){
+  .stats{grid-template-columns:repeat(2,1fr);}
+  thead th:nth-child(n+5),tbody td:nth-child(n+5){display:none;}
+  .r2{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
 
-<!-- ══════════════ PAGE: REGISTER ══════════════ -->
-<div id="pg-register" class="page active">
-  <div class="form-card">
-    <div class="form-head">
-      <div class="f-label">ต.บาตง อ.รือเสาะ จ.นราธิวาส — กรุงเทพมหานคร</div>
-      <div class="f-title">ลงทะเบียนสมาชิก</div>
-      <div class="f-sub">สำหรับคนบาตงที่พักอยู่ใน กทม.</div>
-      <span class="admin-link" onclick="goPage('pg-login')">เข้าสู่ระบบแอดมิน</span>
-    </div>
-    <div class="form-body">
-      <div id="form-fields">
+<!-- ════════ PAGE: FORM ════════ -->
+<div id="pg-form" class="page">
+  <div class="hero">
+    <div class="hero-tag">ต.บาตง · อ.รือเสาะ · จ.นราธิวาส</div>
+    <div class="hero-title">ลงทะเบียนสมาชิก<br>ชุมชนบาตง กทม.</div>
+    <div class="hero-sub">สำหรับคนบาตงที่พักอยู่ในกรุงเทพมหานคร</div>
+    <button class="hero-admin" onclick="goTo('pg-login')">เข้าสู่ระบบแอดมิน →</button>
+  </div>
+
+  <div class="fbody">
+    <div id="form-main">
+
+      <span class="slabel">ข้อมูลพื้นฐาน</span>
+      <div class="card">
         <div class="field">
           <label>ชื่อ-นามสกุล <span class="req">*</span></label>
-          <input type="text" id="f-name" placeholder="เช่น อาหมัด มะแอ">
+          <input type="text" id="f-name" placeholder="เช่น อาหมัด มะแอ" autocomplete="name"/>
         </div>
         <div class="field">
           <label>หมู่บ้านที่บาตง <span class="req">*</span></label>
@@ -350,432 +405,496 @@ tbody td { padding: 13px 16px; font-size: 14px; color: var(--text2); vertical-al
         </div>
         <div class="field">
           <label>เบอร์โทรศัพท์ <span class="req">*</span></label>
-          <input type="tel" id="f-phone" placeholder="0xx-xxx-xxxx" maxlength="12">
+          <input type="tel" id="f-phone" placeholder="0xx-xxx-xxxx" maxlength="12" autocomplete="tel"/>
         </div>
-        <div class="divider"></div>
+      </div>
+
+      <span class="slabel">ข้อมูลใน กทม.</span>
+      <div class="card">
         <div class="field">
           <label>ปัจจุบันทำงานอะไร</label>
-          <input type="text" id="f-job" placeholder="เช่น พนักงานบริษัท, ค้าขาย, นักศึกษา...">
+          <input type="text" id="f-job" placeholder="เช่น พนักงานบริษัท, ค้าขาย, นักศึกษา..."/>
         </div>
         <div class="field">
           <label>พักอยู่แถวไหนใน กทม.</label>
-          <input type="text" id="f-area" placeholder="เช่น ลาดพร้าว, มีนบุรี, บางนา...">
+          <input type="text" id="f-area" placeholder="เช่น ลาดพร้าว, มีนบุรี, บางนา..."/>
         </div>
-        <div class="divider"></div>
-        <div class="field">
-          <label>พร้อมช่วยงานด้านไหน</label>
-          <div class="cb-grid">
-            <label class="cb-item"><input type="checkbox" value="งานศพ"> งานศพ</label>
-            <label class="cb-item"><input type="checkbox" value="งานด่วน"> งานด่วน</label>
-            <label class="cb-item"><input type="checkbox" value="งานบวช"> งานบวช</label>
-            <label class="cb-item"><input type="checkbox" value="งานแต่ง"> งานแต่ง</label>
-            <label class="cb-item"><input type="checkbox" value="ขนของ/ช่วยแรง"> ขนของ/ช่วยแรง</label>
-            <label class="cb-item"><input type="checkbox" value="อื่นๆ"> อื่นๆ</label>
-          </div>
-        </div>
-        <button class="btn-primary" id="btn-submit" onclick="submitForm()">ส่งข้อมูล</button>
-        <div class="note">ข้อมูลจะถูกส่งและบันทึกเพื่อประสานงานชุมชนเท่านั้น</div>
       </div>
 
-      <div class="success-wrap" id="success-wrap">
-        <div class="success-icon">
-          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-            <path d="M5 13l6 6L21 7" stroke="#1A3A2A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+      <span class="slabel">พร้อมช่วยงานด้านไหน</span>
+      <div class="card">
+        <div class="chk-grid">
+          <label class="chk"><input type="checkbox" value="งานศพ"> งานศพ</label>
+          <label class="chk"><input type="checkbox" value="งานด่วน"> งานด่วน</label>
+          <label class="chk"><input type="checkbox" value="งานบวช"> งานบวช</label>
+          <label class="chk"><input type="checkbox" value="งานแต่ง"> งานแต่ง</label>
+          <label class="chk"><input type="checkbox" value="ขนของ/ช่วยแรง"> ขนของ/ช่วยแรง</label>
+          <label class="chk"><input type="checkbox" value="อื่นๆ"> อื่นๆ</label>
         </div>
-        <h3>ส่งข้อมูลเรียบร้อย</h3>
-        <p>ขอบคุณที่ลงทะเบียน<br>ทีมงานจะติดต่อเมื่อมีกิจกรรม</p>
-        <button class="btn-again" onclick="resetForm()">ลงทะเบียนคนอื่น</button>
       </div>
+
+      <button class="btn-main" id="btn-sub" onclick="submitForm()">ส่งข้อมูลลงทะเบียน</button>
+      <p class="fnote">ข้อมูลจะบันทึกไว้เพื่อประสานงานชุมชนเท่านั้น</p>
     </div>
-  </div>
-</div>
 
-<!-- ══════════════ PAGE: LOGIN ══════════════ -->
-<div id="pg-login" class="page">
-  <div class="login-card">
-    <div class="login-head">
-      <div class="login-logo">
-        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-          <rect x="4" y="12" width="18" height="12" rx="2.5" stroke="white" stroke-width="1.8"/>
-          <path d="M8.5 12V8.5a4.5 4.5 0 0 1 9 0V12" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-          <circle cx="13" cy="18" r="1.5" fill="white"/>
+    <div class="ok-screen" id="ok-screen">
+      <div class="ok-circle">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M6 14l6 6L22 8" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
-      <h2>เข้าสู่ระบบแอดมิน</h2>
-      <p>ชุมชนบาตง กรุงเทพมหานคร</p>
-    </div>
-    <div class="login-body">
-      <div class="login-err" id="login-err">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
-      <div class="field">
-        <label>ชื่อผู้ใช้</label>
-        <input type="text" id="l-user" placeholder="username" autocomplete="username">
-      </div>
-      <div class="field">
-        <label>รหัสผ่าน</label>
-        <input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter') doLogin()">
-      </div>
-      <button class="btn-primary" style="margin-top:8px;" onclick="doLogin()">เข้าสู่ระบบ</button>
-      <div class="back-link" onclick="goPage('pg-register')">← กลับไป<span> หน้าลงทะเบียน</span></div>
+      <h3>ลงทะเบียนสำเร็จ!</h3>
+      <p>ขอบคุณที่ร่วมเป็นส่วนหนึ่งของชุมชน<br>ทีมงานจะติดต่อกลับเมื่อมีกิจกรรม</p>
+      <button class="btn-out" onclick="resetForm()">ลงทะเบียนคนอื่น</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════ PAGE: ADMIN ══════════════ -->
-<div id="pg-admin" class="page">
-
-  <div class="topbar">
-    <div class="topbar-brand">ชุมชนบาตง กทม.</div>
-    <div class="nav-tabs">
-      <div class="nav-tab active" onclick="switchPanel('p-members',this)">สมาชิก</div>
-      <div class="nav-tab" onclick="switchPanel('p-admins',this)">จัดการแอดมิน</div>
+<!-- ════════ PAGE: LOGIN ════════ -->
+<div id="pg-login" class="page hidden">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--g);padding:20px;">
+    <div class="lbox">
+      <div class="ltop">
+        <div class="licon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <rect x="4" y="12" width="18" height="12" rx="2.5" stroke="white" stroke-width="1.8"/>
+            <path d="M8 12V8a5 5 0 0 1 10 0v4" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="13" cy="18" r="2" fill="white"/>
+          </svg>
+        </div>
+        <h2>แอดมิน</h2>
+        <p>ชุมชนบาตง กทม.</p>
+      </div>
+      <div class="lform">
+        <div class="lerr" id="lerr">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
+        <div class="field">
+          <label>ชื่อผู้ใช้</label>
+          <input type="text" id="lu" placeholder="username" autocomplete="username"/>
+        </div>
+        <div class="field">
+          <label>รหัสผ่าน</label>
+          <input type="password" id="lp" placeholder="••••••••"
+            autocomplete="current-password"
+            onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
+        <button class="btn-main" onclick="doLogin()" style="margin-top:6px;">เข้าสู่ระบบ</button>
+        <div class="lback" onclick="goTo('pg-form')">← กลับไป<span> หน้าลงทะเบียน</span></div>
+      </div>
     </div>
-    <div class="topbar-right">
-      <span class="user-badge" id="user-badge"></span>
-      <button class="btn-sm btn-ghost" onclick="loadData()">รีเฟรช</button>
-      <button class="btn-sm btn-white" onclick="doLogout()">ออกจากระบบ</button>
+  </div>
+</div>
+
+<!-- ════════ PAGE: ADMIN ════════ -->
+<div id="pg-admin" class="page hidden">
+
+  <div class="abar">
+    <div class="abar-l">
+      <div class="abar-title">ชุมชนบาตง — Admin</div>
+      <div class="abar-sub" id="abar-sub">—</div>
+    </div>
+    <div class="abar-r">
+      <button class="bbtn bbtn-g" onclick="loadMembers()">↻ รีเฟรช</button>
+      <button class="bbtn bbtn-w" onclick="doLogout()">ออกจากระบบ</button>
     </div>
   </div>
 
-  <!-- Panel: Members -->
-  <div id="p-members" class="panel active">
-    <div class="p-inner">
+  <div class="atabs">
+    <div class="atab on" onclick="switchTab('members',this)">สมาชิก</div>
+    <div class="atab" onclick="switchTab('admins',this)">จัดการแอดมิน</div>
+  </div>
 
+  <div class="abody">
+    <div class="notif" id="notif">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <circle cx="7.5" cy="7.5" r="6" stroke="#1A5C32" stroke-width="1.4"/>
+        <path d="M7.5 4.5v3.5l2 1.5" stroke="#1A5C32" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <span id="ntxt"></span>
+    </div>
+
+    <!-- แท็บ สมาชิก -->
+    <div id="ap-members" class="apanel on">
       <div class="stats">
-        <div class="stat-card g"><div class="s-v" id="s-total">—</div><div class="s-l">สมาชิกทั้งหมด</div></div>
-        <div class="stat-card b"><div class="s-v" id="s-new">—</div><div class="s-l">เพิ่มสัปดาห์นี้</div></div>
-        <div class="stat-card a"><div class="s-v" id="s-vil">—</div><div class="s-l">หมู่บ้านที่มี</div></div>
-        <div class="stat-card">  <div class="s-v" id="s-area">—</div><div class="s-l">โซนใน กทม.</div></div>
+        <div class="sc cg"><div class="sv" id="st">—</div><div class="sk">สมาชิกทั้งหมด</div></div>
+        <div class="sc cb"><div class="sv" id="sn">—</div><div class="sk">สัปดาห์นี้</div></div>
+        <div class="sc ca"><div class="sv" id="sv">—</div><div class="sk">หมู่บ้านที่มี</div></div>
+        <div class="sc">   <div class="sv" id="sa">—</div><div class="sk">โซนใน กทม.</div></div>
       </div>
 
-      <div class="exp-bar">
-        <button class="btn-exp" onclick="exportCSV()">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3M2 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="exrow">
+        <button class="exbtn" onclick="exportCSV()">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+            <path d="M7.5 1v9M4.5 7l3 3 3-3M2 12h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           Export CSV
         </button>
       </div>
 
-      <div class="filterbar">
+      <div class="toolbar">
         <div class="sbox">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="#C0C0C0" stroke-width="1.4"/><path d="M8.5 8.5l3 3" stroke="#C0C0C0" stroke-width="1.4" stroke-linecap="round"/></svg>
-          <input type="text" id="q-q" placeholder="ค้นหาชื่อ เบอร์ หรือโซน..." oninput="applyFilter()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="6" cy="6" r="4" stroke="#C0BDB8" stroke-width="1.5"/>
+            <path d="M9 9l3 3" stroke="#C0BDB8" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input type="text" id="qs" placeholder="ค้นหาชื่อ เบอร์ หรือโซน..." oninput="applyFilter()">
         </div>
-        <select class="fsel" id="q-vil" onchange="applyFilter()"><option value="">ทุกหมู่บ้าน</option></select>
-        <select class="fsel" id="q-ar"  onchange="applyFilter()"><option value="">ทุกโซน กทม.</option></select>
-        <select class="fsel" id="q-hlp" onchange="applyFilter()">
-          <option value="">ทุกประเภทงาน</option>
+        <select class="fsel" id="qv" onchange="applyFilter()"><option value="">ทุกหมู่บ้าน</option></select>
+        <select class="fsel" id="qa" onchange="applyFilter()"><option value="">ทุกโซน กทม.</option></select>
+        <select class="fsel" id="qh" onchange="applyFilter()">
+          <option value="">ทุกงาน</option>
           <option>งานศพ</option><option>งานด่วน</option>
           <option>งานบวช</option><option>งานแต่ง</option>
           <option>ขนของ/ช่วยแรง</option>
         </select>
-        <span class="cnt" id="cnt">— รายการ</span>
+        <span class="cnt" id="cnt">—</span>
       </div>
 
-      <div class="tbl-card">
+      <div class="tcard">
         <table>
           <thead>
-            <tr><th>#</th><th>ชื่อ-นามสกุล</th><th>หมู่บ้าน</th><th>เบอร์โทร</th><th>งานปัจจุบัน</th><th>โซน กทม.</th><th>ช่วยงาน</th></tr>
+            <tr>
+              <th>#</th><th>ชื่อ-นามสกุล</th><th>หมู่บ้าน</th>
+              <th>เบอร์โทร</th><th>งานปัจจุบัน</th><th>โซน กทม.</th><th>ช่วยงาน</th>
+            </tr>
           </thead>
           <tbody id="tbody"></tbody>
         </table>
         <div class="pager" id="pager"></div>
       </div>
     </div>
-  </div>
 
-  <!-- Panel: Admin Manager -->
-  <div id="p-admins" class="panel">
-    <div class="p-inner" style="max-width:600px;">
-      <div class="sec-head">รายชื่อแอดมิน</div>
-      <div class="adm-list" id="adm-list"></div>
-      <div class="add-box">
-        <h4>เพิ่มแอดมินใหม่</h4>
-        <div class="row2">
-          <div class="field"><label>ชื่อผู้ใช้ <span class="req">*</span></label><input type="text" id="nu" placeholder="username"></div>
-          <div class="field"><label>รหัสผ่าน <span class="req">*</span></label><input type="password" id="np" placeholder="••••••••"></div>
+    <!-- แท็บ แอดมิน -->
+    <div id="ap-admins" class="apanel">
+      <div style="max-width:560px;">
+        <p style="font-size:14px;color:var(--txt2);margin-bottom:18px;">แอดมินทุกคนดูและจัดการข้อมูลสมาชิกได้ทั้งหมด</p>
+        <div class="alist" id="alist"></div>
+        <div class="addbox">
+          <h4>เพิ่มแอดมินใหม่</h4>
+          <div class="r2">
+            <div class="field">
+              <label>ชื่อผู้ใช้ <span class="req">*</span></label>
+              <input type="text" id="nu" placeholder="username"/>
+            </div>
+            <div class="field">
+              <label>รหัสผ่าน <span class="req">*</span></label>
+              <input type="password" id="np" placeholder="••••••••"/>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:16px;">
+            <label>ชื่อ-นามสกุล</label>
+            <input type="text" id="nn" placeholder="ชื่อแอดมิน"/>
+          </div>
+          <button class="badd" onclick="addAdmin()">+ เพิ่มแอดมิน</button>
         </div>
-        <div class="field" style="margin-bottom:14px;"><label>ชื่อ-นามสกุล</label><input type="text" id="nn" placeholder="ชื่อแอดมินคนนี้"></div>
-        <button class="btn-primary" style="max-width:180px;" onclick="addAdmin()">เพิ่มแอดมิน</button>
       </div>
     </div>
   </div>
-
 </div>
 
-<!-- ══════════════ MODAL ══════════════ -->
-<div class="overlay" id="ov" onclick="closeModal()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-head">
-      <div><div class="m-name" id="m-name"></div><div class="m-vil" id="m-vil"></div></div>
-      <button class="m-x" onclick="closeModal()">✕</button>
+<!-- ════════ MEMBER DRAWER ════════ -->
+<div class="dbg" id="dbg" onclick="closeDrawer()">
+  <div class="drawer" onclick="event.stopPropagation()">
+    <div class="dhandle"></div>
+    <div class="dhead">
+      <div>
+        <div class="dname" id="dn"></div>
+        <div class="dvil" id="dvi"></div>
+      </div>
+      <button class="dx" onclick="closeDrawer()">✕</button>
     </div>
-    <div class="modal-body">
-      <div class="drow"><span class="dk">เบอร์โทร</span><span class="dv" id="m-ph"></span></div>
-      <div class="drow"><span class="dk">งานปัจจุบัน</span><span class="dv" id="m-job"></span></div>
-      <div class="drow"><span class="dk">โซน กทม.</span><span class="dv" id="m-ar"></span></div>
-      <div class="drow"><span class="dk">ช่วยงานด้าน</span><span class="dv" id="m-hlp"></span></div>
-      <div class="drow"><span class="dk">ลงทะเบียน</span><span class="dv" id="m-ts"></span></div>
+    <div class="dbody">
+      <div class="drow"><span class="dk">เบอร์โทร</span><span class="dv" id="dph"></span></div>
+      <div class="drow"><span class="dk">งานปัจจุบัน</span><span class="dv" id="djo"></span></div>
+      <div class="drow"><span class="dk">โซน กทม.</span><span class="dv" id="dar"></span></div>
+      <div class="drow"><span class="dk">ช่วยงานด้าน</span><span class="dv" id="dhe"></span></div>
+      <div class="drow"><span class="dk">ลงทะเบียน</span><span class="dv" id="dts"></span></div>
     </div>
-    <div class="modal-actions">
-      <button class="btn-del2" onclick="deleteRow()">ลบรายการนี้</button>
-      <button class="btn-cls2" onclick="closeModal()">ปิด</button>
+    <div class="dact">
+      <button class="bdel" onclick="deleteRow()">ลบรายการนี้</button>
+      <button class="bcls" onclick="closeDrawer()">ปิด</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════ TOAST ══════════════ -->
-<div class="toast" id="toast"></div>
-
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+/* ── CONFIG ── */
+const GAS = 'https://script.google.com/macros/s/AKfycbyAUb0uoxw7YuSV9cu0TyyBT0bIFUsCrZ1dfAg8QE8ntaJ4f46AUJ5WrUPi2TO9hP1sWA/exec';
 
-/* ── state ── */
-let currentAdmin = null;
-let allData = [], filtered = [], selIdx = null, curPage = 1;
-const PER = 15;
-
-const SAMPLE = [
-  { name:'อาหมัด มะแอ',           village:'หมู่ที่ 3 — บ้านบาตง',              phone:'089-111-2222', job:'พนักงานบริษัท', area:'ลาดพร้าว', helps:'งานศพ, งานด่วน',          timestamp:'09/04/2568 08:30' },
-  { name:'ฮาซัน โต๊ะมิ',          village:'หมู่ที่ 1 — บ้านตะแม็ง',            phone:'091-333-4444', job:'ค้าขาย',        area:'มีนบุรี',  helps:'งานศพ',                  timestamp:'09/04/2568 09:10' },
-  { name:'นูรีดา สาและ',           village:'หมู่ที่ 5 — บ้านตันหยง',            phone:'093-555-6666', job:'นักศึกษา',      area:'บางเขน',  helps:'งานบวช, งานแต่ง',        timestamp:'08/04/2568 14:20' },
-  { name:'อิสมาแอ ยูโซ๊ะ',        village:'หมู่ที่ 4 — บ้านบลูกาฮูลู',         phone:'086-777-8888', job:'ช่างเชื่อม',   area:'บางนา',   helps:'ขนของ/ช่วยแรง, งานด่วน', timestamp:'08/04/2568 16:45' },
-  { name:'ซูลัยดา แวหามะ',        village:'หมู่ที่ 2 — บ้านสันติสุข',           phone:'092-999-0000', job:'พยาบาล',       area:'ดอนเมือง',helps:'งานศพ, งานด่วน',          timestamp:'07/04/2568 11:00' },
-  { name:'มูฮัมหมัด เจ๊ะแว',      village:'หมู่ที่ 6 — บ้านบลูกาฮีเล',         phone:'082-123-4567', job:'ไรเดอร์',      area:'ลาดพร้าว',helps:'งานด่วน, ขนของ/ช่วยแรง', timestamp:'07/04/2568 13:30' },
-  { name:'ฟาตีมะห์ หะยีดอเลาะ',  village:'หมู่ที่ 7 — บ้านกำปงบูเก๊ะ',        phone:'084-234-5678', job:'แม่บ้าน',      area:'สาทร',    helps:'งานศพ, งานแต่ง',          timestamp:'06/04/2568 09:00' },
-  { name:'อับดุลเลาะ กาเซ็ง',     village:'หมู่ที่ 8 — บ้านบลูกาฮีเลตะวันตก', phone:'085-345-6789', job:'ทนายความ',    area:'รัชดา',   helps:'งานด่วน',                timestamp:'06/04/2568 15:20' },
-  { name:'นาซือเราะห์ แวดือราแม', village:'หมู่ที่ 3 — บ้านบาตง',              phone:'087-456-7890', job:'ครู',          area:'บึงกุ่ม', helps:'งานบวช, งานศพ',           timestamp:'05/04/2568 10:10' },
-  { name:'ซาการียา ยูนุ',         village:'หมู่ที่ 1 — บ้านตะแม็ง',            phone:'088-567-8901', job:'วิศวกร',      area:'บางเขน',  helps:'ขนของ/ช่วยแรง',           timestamp:'05/04/2568 12:00' },
-];
-
-/* ── admin storage ── */
-function getAdmins() {
-  try { const r = localStorage.getItem('batong_adm'); if (r) return JSON.parse(r); } catch(e){}
-  const def = [{ user:'usman', pass:'usman', name:'Usman', root:true }];
-  setAdmins(def); return def;
-}
-function setAdmins(list) { localStorage.setItem('batong_adm', JSON.stringify(list)); }
-
-/* ── page routing — key fix: each page has its own display value ── */
-function goPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+/* ── PAGE NAVIGATION ── */
+let curPg = 'pg-form';
+function goTo(id) {
+  if(id===curPg) return;
+  const from = document.getElementById(curPg);
+  const to   = document.getElementById(id);
+  from.classList.add('hidden');
+  to.classList.remove('hidden');
+  to.scrollTop = 0;
+  curPg = id;
 }
 
-/* ── auth ── */
-function doLogin() {
-  const adms = getAdmins();
-  const u = document.getElementById('l-user').value.trim();
-  const p = document.getElementById('l-pass').value;
-  const found = adms.find(a => a.user === u && a.pass === p);
-  const errEl = document.getElementById('login-err');
-  if (!found) { errEl.style.display = 'block'; return; }
-  errEl.style.display = 'none';
-  document.getElementById('l-pass').value = '';
-  currentAdmin = found;
-  document.getElementById('user-badge').textContent = found.name || found.user;
-  goPage('pg-admin');
-  loadData();
+/* ── AUTH ── */
+function loadAdmins(){
+  try{const r=localStorage.getItem('batong_adm');if(r)return JSON.parse(r);}catch(e){}
+  const d=[{user:'usman',pass:'usman',name:'Usman',root:true}];
+  saveAdmins(d);return d;
+}
+function saveAdmins(l){localStorage.setItem('batong_adm',JSON.stringify(l));}
+
+let admins=loadAdmins(), me=null;
+
+function doLogin(){
+  admins=loadAdmins();
+  const u=document.getElementById('lu').value.trim();
+  const p=document.getElementById('lp').value;
+  const f=admins.find(a=>a.user===u&&a.pass===p);
+  const err=document.getElementById('lerr');
+  if(!f){err.style.display='block';return;}
+  err.style.display='none';
+  document.getElementById('lp').value='';
+  me=f; goTo('pg-admin'); loadMembers();
+}
+function doLogout(){me=null;goTo('pg-form');}
+
+/* ── ADMIN TABS ── */
+function switchTab(t,btn){
+  document.querySelectorAll('.atab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.apanel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('ap-'+t).classList.add('on');
+  if(t==='admins')renderAdmins();
 }
 
-function doLogout() {
-  currentAdmin = null;
-  goPage('pg-register');
+/* ── LOAD DATA FROM GOOGLE SHEETS ── */
+let all=[],filt=[],selI=null,pg=1;
+const PER=15;
+
+function gv(d,...keys){for(const k of keys)if(d[k]!==undefined&&d[k]!=='')return String(d[k]);return '';}
+
+function loadMembers(){
+  document.getElementById('tbody').innerHTML=
+    '<tr><td colspan="7" class="empty-row">กำลังโหลดข้อมูลจาก Google Sheets...</td></tr>';
+  const t=new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('abar-sub').textContent=(me?.name||me?.user||'—')+' · '+t;
+
+  fetch(GAS+'?action=get')
+    .then(r=>r.json())
+    .then(data=>{
+      all=Array.isArray(data)?data:[];
+      processData();
+    })
+    .catch(()=>{
+      document.getElementById('tbody').innerHTML=
+        '<tr><td colspan="7" class="empty-row" style="color:var(--red)">ไม่สามารถเชื่อมต่อ Google Sheets — กรุณาตรวจสอบ Apps Script</td></tr>';
+    });
 }
 
-/* ── admin sub-panel tabs ── */
-function switchPanel(id, tab) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  tab.classList.add('active');
-  if (id === 'p-admins') renderAdmins();
-}
+function processData(){
+  const vils=[...new Set(all.map(d=>gv(d,'village','หมู่บ้าน')).filter(Boolean))].sort();
+  const ars =[...new Set(all.map(d=>gv(d,'area','โซน','โซนกทม')).filter(Boolean))].sort();
 
-/* ── data ── */
-function loadData() {
-  allData = [...SAMPLE];
-  processData();
-}
+  const vSel=document.getElementById('qv'), aSel=document.getElementById('qa');
+  const cv=vSel.value, ca=aSel.value;
+  vSel.innerHTML='<option value="">ทุกหมู่บ้าน</option>'+vils.map(v=>`<option${v===cv?' selected':''}>${v}</option>`).join('');
+  aSel.innerHTML='<option value="">ทุกโซน กทม.</option>'+ars.map(a=>`<option${a===ca?' selected':''}>${a}</option>`).join('');
 
-function processData() {
-  const vils  = [...new Set(allData.map(d=>d.village).filter(Boolean))].sort();
-  const areas = [...new Set(allData.map(d=>d.area).filter(Boolean))].sort();
-  const vS=document.getElementById('q-vil'), aS=document.getElementById('q-ar');
-  const cv=vS.value, ca=aS.value;
-  vS.innerHTML='<option value="">ทุกหมู่บ้าน</option>'+vils.map(v=>`<option${v===cv?' selected':''}>${v}</option>`).join('');
-  aS.innerHTML='<option value="">ทุกโซน กทม.</option>'+areas.map(a=>`<option${a===ca?' selected':''}>${a}</option>`).join('');
-  document.getElementById('s-total').textContent = allData.length;
-  document.getElementById('s-vil').textContent   = vils.length;
-  document.getElementById('s-area').textContent  = areas.length;
-  const wk = allData.filter(d => {
-    try { const pts=d.timestamp.split('/'); return Date.now()-new Date(`${+pts[2].split(' ')[0]-543}-${pts[1]}-${pts[0]}`)<7*864e5; }catch{return false;}
+  document.getElementById('st').textContent=all.length;
+  document.getElementById('sv').textContent=vils.length;
+  document.getElementById('sa').textContent=ars.length;
+
+  const now=Date.now();
+  const wk=all.filter(d=>{
+    const ts=gv(d,'timestamp','Timestamp');
+    try{
+      let date;
+      if(ts.includes('/')){const p=ts.split(/[\/\s:]/);date=new Date(+p[2]-543,+p[1]-1,+p[0]);}
+      else{date=new Date(ts);}
+      return !isNaN(date)&&(now-date)<7*864e5;
+    }catch{return false;}
   });
-  document.getElementById('s-new').textContent = wk.length;
+  document.getElementById('sn').textContent=wk.length;
   applyFilter();
 }
 
-function applyFilter() {
-  const q   = document.getElementById('q-q').value.toLowerCase();
-  const vil = document.getElementById('q-vil').value;
-  const ar  = document.getElementById('q-ar').value;
-  const hlp = document.getElementById('q-hlp').value;
-  filtered = allData.filter(d =>
-    (!q   || [d.name,d.phone,d.area,d.job,d.village].some(f=>(f||'').toLowerCase().includes(q))) &&
-    (!vil || d.village===vil) && (!ar||d.area===ar) && (!hlp||(d.helps||'').includes(hlp))
-  );
-  document.getElementById('cnt').textContent = filtered.length+' รายการ';
-  curPage=1; renderTable(); renderPager();
+function applyFilter(){
+  const q=document.getElementById('qs').value.toLowerCase();
+  const vi=document.getElementById('qv').value;
+  const ar=document.getElementById('qa').value;
+  const hl=document.getElementById('qh').value;
+
+  filt=all.filter(d=>{
+    const name   =gv(d,'name','ชื่อ','ชื่อ-นามสกุล');
+    const village=gv(d,'village','หมู่บ้าน');
+    const phone  =gv(d,'phone','เบอร์โทร');
+    const job    =gv(d,'job','งานปัจจุบัน');
+    const area   =gv(d,'area','โซน','โซนกทม');
+    const helps  =gv(d,'helps','ช่วยงาน');
+    return(!q||[name,phone,area,job,village].some(f=>f.toLowerCase().includes(q)))&&
+           (!vi||village===vi)&&(!ar||area===ar)&&(!hl||helps.includes(hl));
+  });
+  document.getElementById('cnt').textContent=filt.length+' รายการ';
+  pg=1; renderTable(); renderPager();
 }
 
-function renderTable() {
-  const s=(curPage-1)*PER, page=filtered.slice(s,s+PER);
-  const tb=document.getElementById('tbody');
-  if(!page.length){tb.innerHTML=`<tr><td colspan="7" class="no-data">ไม่พบข้อมูล</td></tr>`;return;}
-  tb.innerHTML=page.map((d,i)=>{
-    const tags=(d.helps||'').split(',').map(h=>`<span class="htag">${h.trim()}</span>`).join('');
-    const vs=(d.village||'').replace(/หมู่ที่ \d+ — /,'');
-    return `<tr onclick="openModal(${s+i})">
-      <td class="td-d">${s+i+1}</td>
-      <td class="td-n">${d.name||'—'}</td>
-      <td><span class="pill">${vs||'—'}</span></td>
-      <td class="td-sm">${d.phone||'—'}</td>
-      <td class="td-d">${d.job||'—'}</td>
-      <td class="td-d">${d.area||'—'}</td>
-      <td>${tags||'<span style="color:#CCC;font-size:12px;">—</span>'}</td>
+function renderTable(){
+  const start=(pg-1)*PER, page=filt.slice(start,start+PER);
+  const tbody=document.getElementById('tbody');
+  if(!page.length){tbody.innerHTML='<tr><td colspan="7" class="empty-row">ไม่พบข้อมูล</td></tr>';return;}
+  tbody.innerHTML=page.map((d,i)=>{
+    const name   =gv(d,'name','ชื่อ','ชื่อ-นามสกุล')||'—';
+    const village=gv(d,'village','หมู่บ้าน')||'—';
+    const phone  =gv(d,'phone','เบอร์โทร')||'—';
+    const job    =gv(d,'job','งานปัจจุบัน')||'—';
+    const area   =gv(d,'area','โซน','โซนกทม')||'—';
+    const helps  =gv(d,'helps','ช่วยงาน')||'';
+    const short  =village.replace(/หมู่ที่ \d+ — /,'');
+    const tags   =helps.split(',').map(h=>h.trim()).filter(Boolean).map(h=>`<span class="htag">${h}</span>`).join('');
+    return `<tr onclick="openDrawer(${start+i})">
+      <td class="td">${start+i+1}</td>
+      <td class="tn">${name}</td>
+      <td><span class="vpill">${short}</span></td>
+      <td class="ts">${phone}</td>
+      <td class="td">${job}</td>
+      <td class="td">${area}</td>
+      <td>${tags||'<span style="color:#CCC;font-size:12px">—</span>'}</td>
     </tr>`;
   }).join('');
 }
 
-function renderPager() {
-  const total=Math.ceil(filtered.length/PER), el=document.getElementById('pager');
+function renderPager(){
+  const total=Math.ceil(filt.length/PER);
+  const el=document.getElementById('pager');
   if(total<=1){el.innerHTML='';return;}
-  let h=`<button class="pg" onclick="goP(${curPage-1})">‹</button>`;
+  let h=`<button class="pg" onclick="goPage(${pg-1})">‹</button>`;
   for(let i=1;i<=total;i++){
-    if(i===1||i===total||Math.abs(i-curPage)<=1)
-      h+=`<button class="pg${i===curPage?' on':''}" onclick="goP(${i})">${i}</button>`;
-    else if(Math.abs(i-curPage)===2)
-      h+=`<span style="color:#CCC;padding:0 3px">…</span>`;
+    if(i===1||i===total||Math.abs(i-pg)<=1)
+      h+=`<button class="pg${i===pg?' on':''}" onclick="goPage(${i})">${i}</button>`;
+    else if(Math.abs(i-pg)===2)h+=`<span style="color:#CCC;padding:0 3px">…</span>`;
   }
-  el.innerHTML=h+`<button class="pg" onclick="goP(${curPage+1})">›</button>`;
+  h+=`<button class="pg" onclick="goPage(${pg+1})">›</button>`;
+  el.innerHTML=h;
 }
-function goP(p){const t=Math.ceil(filtered.length/PER);if(p<1||p>t)return;curPage=p;renderTable();renderPager();}
+function goPage(p){const t=Math.ceil(filt.length/PER);if(p<1||p>t)return;pg=p;renderTable();renderPager();}
 
-function openModal(idx) {
-  selIdx=idx; const d=filtered[idx];
-  document.getElementById('m-name').textContent = d.name    ||'—';
-  document.getElementById('m-vil').textContent  = d.village ||'—';
-  document.getElementById('m-ph').textContent   = d.phone   ||'—';
-  document.getElementById('m-job').textContent  = d.job     ||'—';
-  document.getElementById('m-ar').textContent   = d.area    ||'—';
-  document.getElementById('m-hlp').textContent  = d.helps   ||'—';
-  document.getElementById('m-ts').textContent   = d.timestamp||'—';
-  document.getElementById('ov').classList.add('on');
+/* ── DRAWER ── */
+function openDrawer(i){
+  selI=i; const d=filt[i];
+  document.getElementById('dn').textContent =gv(d,'name','ชื่อ','ชื่อ-นามสกุล')||'—';
+  document.getElementById('dvi').textContent=gv(d,'village','หมู่บ้าน')||'—';
+  document.getElementById('dph').textContent=gv(d,'phone','เบอร์โทร')||'—';
+  document.getElementById('djo').textContent=gv(d,'job','งานปัจจุบัน')||'—';
+  document.getElementById('dar').textContent=gv(d,'area','โซน','โซนกทม')||'—';
+  document.getElementById('dhe').textContent=gv(d,'helps','ช่วยงาน')||'—';
+  document.getElementById('dts').textContent=gv(d,'timestamp','Timestamp')||'—';
+  const bg=document.getElementById('dbg');
+  bg.style.display='flex';
+  requestAnimationFrame(()=>bg.classList.add('open'));
 }
-function closeModal(){document.getElementById('ov').classList.remove('on');selIdx=null;}
-
+function closeDrawer(){
+  const bg=document.getElementById('dbg');
+  bg.classList.remove('open');
+  setTimeout(()=>{bg.style.display='none';},300);
+  selI=null;
+}
 function deleteRow(){
-  if(selIdx===null)return;
-  const name=filtered[selIdx].name;
+  if(selI===null)return;
+  const d=filt[selI];
+  const name=gv(d,'name','ชื่อ','ชื่อ-นามสกุล');
   if(!confirm(`ยืนยันลบ "${name}"?`))return;
-  const oi=allData.indexOf(filtered[selIdx]);
-  if(oi>-1)allData.splice(oi,1);
-  closeModal(); processData();
-  toast(`ลบ "${name}" เรียบร้อยแล้ว`);
+  const oi=all.indexOf(d);if(oi>-1)all.splice(oi,1);
+  closeDrawer();processData();
+  showNotif(`ลบ "${name}" เรียบร้อยแล้ว`);
 }
-
 function exportCSV(){
-  if(!filtered.length){alert('ไม่มีข้อมูล');return;}
-  const h=['ชื่อ-นามสกุล','หมู่บ้าน','เบอร์โทร','งานปัจจุบัน','โซน กทม.','ช่วยงานด้าน','วันที่'];
-  const rows=filtered.map(d=>[d.name,d.village,d.phone,d.job,d.area,d.helps,d.timestamp].map(v=>`"${(v||'').replace(/"/g,'""')}"`));
+  if(!filt.length){alert('ไม่มีข้อมูล');return;}
+  const h=['ชื่อ-นามสกุล','หมู่บ้าน','เบอร์โทร','งานปัจจุบัน','โซน กทม.','ช่วยงาน','วันที่'];
+  const rows=filt.map(d=>[
+    gv(d,'name','ชื่อ','ชื่อ-นามสกุล'),gv(d,'village','หมู่บ้าน'),gv(d,'phone','เบอร์โทร'),
+    gv(d,'job','งานปัจจุบัน'),gv(d,'area','โซน','โซนกทม'),gv(d,'helps','ช่วยงาน'),gv(d,'timestamp','Timestamp')
+  ].map(v=>`"${(v||'').replace(/"/g,'""')}"`));
   const csv='\uFEFF'+[h,...rows].map(r=>r.join(',')).join('\n');
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download='สมาชิกบาตง_'+new Date().toLocaleDateString('th-TH').replace(/\//g,'-')+'.csv';
+  a.download='บาตง_'+new Date().toLocaleDateString('th-TH').replace(/\//g,'-')+'.csv';
   a.click();
 }
 
-/* ── admin manager ── */
-function renderAdmins() {
-  const adms=getAdmins();
-  document.getElementById('adm-list').innerHTML=adms.map((a,i)=>{
+/* ── FORM SUBMIT ── */
+function submitForm(){
+  const name   =document.getElementById('f-name').value.trim();
+  const village=document.getElementById('f-village').value;
+  const phone  =document.getElementById('f-phone').value.trim();
+  const job    =document.getElementById('f-job').value.trim();
+  const area   =document.getElementById('f-area').value.trim();
+  const helps  =[...document.querySelectorAll('.chk-grid input:checked')].map(c=>c.value).join(', ');
+  if(!name||!village||!phone){alert('กรุณากรอกชื่อ หมู่บ้าน และเบอร์โทรให้ครบ');return;}
+  const btn=document.getElementById('btn-sub');
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>กำลังส่ง...';
+  const payload={action:'add',name,village,phone,job,area,helps,
+    timestamp:new Date().toLocaleString('th-TH',{timeZone:'Asia/Bangkok'})};
+  fetch(GAS,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+  .catch(()=>{})
+  .finally(()=>{
+    document.getElementById('form-main').style.display='none';
+    document.getElementById('ok-screen').style.display='block';
+    btn.disabled=false;btn.innerHTML='ส่งข้อมูลลงทะเบียน';
+  });
+}
+function resetForm(){
+  ['f-name','f-phone','f-job','f-area'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-village').value='';
+  document.querySelectorAll('.chk-grid input').forEach(c=>c.checked=false);
+  document.getElementById('form-main').style.display='block';
+  document.getElementById('ok-screen').style.display='none';
+}
+
+/* ── ADMIN MANAGER ── */
+function renderAdmins(){
+  admins=loadAdmins();
+  document.getElementById('alist').innerHTML=admins.map((a,i)=>{
     const av=(a.name||a.user).substring(0,2).toUpperCase();
-    const canDel=!a.root && currentAdmin?.root;
-    return `<div class="adm-row">
-      <div class="adm-left">
-        <div class="adm-av ${a.root?'root':''}">${av}</div>
+    const canDel=!a.root&&me?.root;
+    return `<div class="ai">
+      <div class="ail">
+        <div class="aav${a.root?' root':''}">${av}</div>
         <div>
-          <div class="a-u">${a.user}${a.root?'<span class="badge-root">หัวหน้า</span>':''}</div>
-          <div class="a-n">${a.name||'—'}</div>
+          <div class="au">${a.user}${a.root?'<span class="rbadge">หัวหน้า</span>':''}</div>
+          <div class="ar">${a.name||'—'}</div>
         </div>
       </div>
-      ${canDel?`<button class="btn-del-sm" onclick="removeAdmin(${i})">ลบ</button>`:''}
+      ${canDel?`<button class="bds" onclick="removeAdmin(${i})">ลบ</button>`:''}
     </div>`;
   }).join('');
 }
-
 function addAdmin(){
   const u=document.getElementById('nu').value.trim();
   const p=document.getElementById('np').value.trim();
   const n=document.getElementById('nn').value.trim();
   if(!u||!p){alert('กรุณาใส่ชื่อผู้ใช้และรหัสผ่าน');return;}
-  const adms=getAdmins();
-  if(adms.find(a=>a.user===u)){alert(`ชื่อผู้ใช้ "${u}" มีอยู่แล้ว`);return;}
-  adms.push({user:u,pass:p,name:n,root:false});
-  setAdmins(adms);
+  admins=loadAdmins();
+  if(admins.find(a=>a.user===u)){alert(`"${u}" มีอยู่แล้ว`);return;}
+  admins.push({user:u,pass:p,name:n,root:false});
+  saveAdmins(admins);
   ['nu','np','nn'].forEach(id=>document.getElementById(id).value='');
-  renderAdmins();
-  toast(`เพิ่มแอดมิน "${u}" เรียบร้อยแล้ว`);
+  renderAdmins();showNotif(`เพิ่มแอดมิน "${u}" เรียบร้อย`);
 }
-
 function removeAdmin(i){
-  const adms=getAdmins();
-  const a=adms[i];
-  if(!a||a.root){alert('ไม่สามารถลบหัวหน้าแอดมินได้');return;}
+  admins=loadAdmins();const a=admins[i];
+  if(!a||a.root){alert('ลบหัวหน้าไม่ได้');return;}
   if(!confirm(`ยืนยันลบ "${a.user}"?`))return;
-  adms.splice(i,1); setAdmins(adms); renderAdmins();
-  toast(`ลบแอดมิน "${a.user}" เรียบร้อยแล้ว`);
+  admins.splice(i,1);saveAdmins(admins);
+  renderAdmins();showNotif(`ลบแอดมิน "${a.user}" เรียบร้อย`);
 }
 
-/* ── register form ── */
-function submitForm(){
-  const name=document.getElementById('f-name').value.trim();
-  const village=document.getElementById('f-village').value;
-  const phone=document.getElementById('f-phone').value.trim();
-  const job=document.getElementById('f-job').value.trim();
-  const area=document.getElementById('f-area').value.trim();
-  const helps=[...document.querySelectorAll('.cb-grid input:checked')].map(c=>c.value).join(', ');
-  if(!name||!village||!phone){alert('กรุณากรอกชื่อ หมู่บ้าน และเบอร์โทรให้ครบ');return;}
-  const btn=document.getElementById('btn-submit');
-  btn.disabled=true; btn.textContent='กำลังส่ง...';
-  SAMPLE.unshift({name,village,phone,job,area,helps,timestamp:new Date().toLocaleString('th-TH')});
-  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,village,phone,job,area,helps})})
-  .catch(()=>{}).finally(()=>{
-    document.getElementById('form-fields').style.display='none';
-    document.getElementById('success-wrap').style.display='block';
-    btn.disabled=false; btn.textContent='ส่งข้อมูล';
-  });
+/* ── NOTIFY ── */
+function showNotif(msg){
+  const el=document.getElementById('notif');
+  document.getElementById('ntxt').textContent=msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),4000);
 }
 
-function resetForm(){
-  ['f-name','f-phone','f-job','f-area'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-village').value='';
-  document.querySelectorAll('.cb-grid input').forEach(c=>c.checked=false);
-  document.getElementById('form-fields').style.display='block';
-  document.getElementById('success-wrap').style.display='none';
-}
-
-/* ── toast ── */
-let toastTimer;
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.remove('show'),3500);
-}
-
-setInterval(()=>{ if(currentAdmin) loadData(); }, 60000);
+/* ── AUTO REFRESH ── */
+setInterval(()=>{if(me)loadMembers();},60000);
 </script>
 </body>
 </html>
