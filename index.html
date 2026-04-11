@@ -64,7 +64,7 @@ textarea.fi{resize:none;line-height:1.7;}
 
 /* ════ LOGIN PAGE ════ */
 #pg-login{display:flex;align-items:center;justify-content:center;background:var(--g);min-height:100vh;padding:20px;}
-.lbox{background:var(--wh);width:100%;max-width:360px;border-radius:20px;overflow:hidden;box-shadow:var(--shl);}
+.lbox{background:var(--wh);width:100%;max-width:360px;border-radius:20px;overflow:hidden;box-shadow:var(--shl);position:relative;}
 .ltop{background:var(--g);padding:36px 28px 28px;text-align:center;}
 .licon{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
 .ltop h2{font-size:20px;font-weight:700;color:#fff;}
@@ -73,6 +73,21 @@ textarea.fi{resize:none;line-height:1.7;}
 .lerr{display:none;background:var(--redl);border:1px solid #F5C0C0;color:var(--red);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:16px;}
 .lback{text-align:center;margin-top:18px;font-size:13px;color:var(--tx3);cursor:pointer;}
 .lback span{color:var(--g);font-weight:700;}
+
+/* ── LOGIN LOADING OVERLAY ── */
+.login-loading{display:none;position:absolute;inset:0;background:rgba(26,58,42,0.93);border-radius:20px;z-index:10;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.login-loading.show{display:flex;}
+.login-spinner{width:46px;height:46px;border:3.5px solid rgba(255,255,255,0.18);border-top-color:#fff;border-radius:50%;animation:lspin .75s linear infinite;}
+@keyframes lspin{to{transform:rotate(360deg);}}
+.login-loading-text{color:#fff;font-size:14px;font-weight:600;letter-spacing:.04em;}
+.ldots::after{content:'';animation:ldots 1.4s steps(4,end) infinite;}
+@keyframes ldots{0%{content:'';}25%{content:'.';}50%{content:'..';}75%{content:'...';}100%{content:'';}}
+
+/* ── CREDIT BAR ── */
+.credit-bar{text-align:center;padding:16px 20px 18px;font-size:11px;color:rgba(255,255,255,0.22);letter-spacing:.05em;border-top:1px solid rgba(255,255,255,0.07);margin-top:4px;}
+.credit-bar b{color:rgba(255,255,255,0.5);}
+.form-credit{width:100%;max-width:520px;text-align:center;padding:24px 16px 8px;font-size:11px;color:#BBB8B2;letter-spacing:.04em;}
+.form-credit b{color:#888;}
 
 /* ════ ADMIN PAGE ════ */
 .abar{background:var(--g);padding:15px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
@@ -278,6 +293,7 @@ tbody td{padding:13px 16px;font-size:14px;color:var(--tx2);vertical-align:middle
       <button class="btn-out" onclick="resetForm()">ลงทะเบียนคนอื่น</button>
     </div>
   </div>
+  <div class="form-credit">พัฒนาโดย <b>BatongIT Team</b></div>
 </div>
 
 <!-- ════ PAGE: LOGIN ════ -->
@@ -298,6 +314,13 @@ tbody td{padding:13px 16px;font-size:14px;color:var(--tx2);vertical-align:middle
         <button class="btn-main" onclick="doLogin()" style="margin-top:6px;">เข้าสู่ระบบ</button>
         <div class="lback" onclick="goTo('pg-form')">← กลับไป<span> หน้าลงทะเบียน</span></div>
       </div>
+      <!-- Loading overlay -->
+      <div class="login-loading" id="login-loading">
+        <div class="login-spinner"></div>
+        <div class="login-loading-text">กำลังเข้าสู่ระบบ<span class="ldots"></span></div>
+      </div>
+      <!-- Credit bar inside login box -->
+      <div class="credit-bar">สร้างโดย <b>BatongIT Team</b></div>
     </div>
   </div>
 </div>
@@ -345,9 +368,9 @@ tbody td{padding:13px 16px;font-size:14px;color:var(--tx2);vertical-align:middle
         <select class="fsel" id="qa" onchange="applyFilter()"><option value="">ทุกโซน กทม.</option></select>
         <select class="fsel" id="qh" onchange="applyFilter()">
           <option value="">ทุกงาน</option>
-          <option>งานศพ</option><option>งานด่วน</option>
-          <option>งานบวช</option><option>งานแต่ง</option>
-          <option>ขนของ/ช่วยแรง</option>
+          <option>การศึกษา</option><option>อุบัติเหตุ</option>
+          <option>หางาน</option><option>ขนของ/ช่วยแรง</option>
+          <option>อื่นๆ</option>
         </select>
         <span class="cnt" id="cnt">—</span>
       </div>
@@ -484,18 +507,25 @@ function doLogin() {
   const u = document.getElementById('lu').value.trim();
   const p = document.getElementById('lp').value;
   const err = document.getElementById('lerr');
+  const loading = document.getElementById('login-loading');
   if(!u||!p){err.style.display='block';return;}
+  err.style.display='none';
+  loading.classList.add('show');
   fetch(`${GAS}?action=login&user=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`)
     .then(r=>r.json())
     .then(res=>{
+      loading.classList.remove('show');
       if(!res.ok){err.style.display='block';return;}
-      err.style.display='none';
       document.getElementById('lp').value='';
       me={...res,username:u};
       goTo('pg-admin');
       loadMembers();
     })
-    .catch(()=>{err.textContent='เชื่อมต่อไม่ได้ กรุณาลองใหม่';err.style.display='block';});
+    .catch(()=>{
+      loading.classList.remove('show');
+      err.textContent='เชื่อมต่อไม่ได้ กรุณาลองใหม่';
+      err.style.display='block';
+    });
 }
 function doLogout(){me=null;goTo('pg-form');}
 
